@@ -158,6 +158,7 @@
     <ClInclude Include="FontHandler.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LibraryHandler.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="TextureHandler.h" />
     <ClInclude Include="Timer.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="FontHandler.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LibraryHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="TextureHandler.cpp" />
