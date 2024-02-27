@@ -1,8 +1,7 @@
 #pragma once
+
 #include <iostream>
 #include <SDL.h>
-
-
 
 class Window
 {
@@ -15,8 +14,6 @@ public:
 private:
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
-
-
 
 };
 

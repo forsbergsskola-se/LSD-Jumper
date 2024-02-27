@@ -11,8 +11,8 @@ Window::~Window()
 
 bool Window::Create()
 {
-	int WIDTH = 800;
-	int HEIGHT = 600;
+	const int WIDTH = 1280;
+	const int HEIGHT = 720;
 	window = SDL_CreateWindow("LSD-Jumpper", // Title of the SDL window 
 		SDL_WINDOWPOS_CENTERED, //Position x of the window 
 		SDL_WINDOWPOS_CENTERED, // Position y of the window 
@@ -34,8 +34,6 @@ bool Window::Create()
 		std::cout << "Renderer failed! " << SDL_GetError();
 		return false;
 	}
-
-	
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 

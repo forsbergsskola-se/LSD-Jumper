@@ -1,8 +1,12 @@
 #pragma once
 
+#include "LibraryHandler.h"
+#include "Window.h"
+
 class Application 
 {
 public:
+
 	Application();
 	~Application();
 
@@ -12,5 +16,10 @@ public:
 	void Update();
 	void Render();
 
+private:
+
+	LibraryHandler* libraryHandler = nullptr;
+
+	Window* window = nullptr;
 
 };

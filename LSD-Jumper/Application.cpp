@@ -12,15 +12,24 @@ Application::~Application()
 
 bool Application::Create()
 {
-//	if (!window->Create())
-//		return false;
+	libraryHandler = new LibraryHandler;
+	if (!libraryHandler->Create())
+		return false;
+
+	window = new Window;
+	if (!window->Create())
+		return false;
 
 	return true;
 }
 
 void Application::Destroy()
 {
+	window->Destroy();
+	delete window;
 
+	libraryHandler->Destroy();
+	delete libraryHandler;
 }
 
 void Application::Run() 
