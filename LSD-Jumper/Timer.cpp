@@ -4,11 +4,6 @@
 void Timer::Update()
 {
 	startTime = SDL_GetTicks();
-	preTime = SDL_GetTicks();
-	DeltaTime = (preTime - startTime) * 0.0001;
+	deltaTime = (startTime - preTime) * 0.001;
+	preTime = startTime;
 }
-double Timer::getDeltaTime()
-{
-	return DeltaTime;
-}
-

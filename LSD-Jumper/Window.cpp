@@ -9,11 +9,12 @@ Window::~Window()
 
 }
 
+
 bool Window::Create()
 {
 	const int WIDTH = 1280;
 	const int HEIGHT = 720;
-	window = SDL_CreateWindow("LSD-Jumpper", // Title of the SDL window 
+	window = SDL_CreateWindow("LSD-Jumper", // Title of the SDL window 
 		SDL_WINDOWPOS_CENTERED, //Position x of the window 
 		SDL_WINDOWPOS_CENTERED, // Position y of the window 
 		WIDTH, // Width of the window in pixels 
@@ -43,4 +44,15 @@ void Window::Destroy()
 {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+}
+
+void Window::BeginRender()
+{
+	SDL_SetRenderDrawColor(renderer, 0,0,0,255);
+	SDL_RenderClear(renderer);
+}
+
+void Window::EndRender()
+{
+	SDL_RenderPresent(renderer);
 }

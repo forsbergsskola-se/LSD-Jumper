@@ -20,6 +20,10 @@ bool Application::Create()
 	if (!window->Create())
 		return false;
 
+	game = new Game;
+	if (!game->Create())
+		return false;
+
 	return true;
 }
 
@@ -30,6 +34,9 @@ void Application::Destroy()
 
 	libraryHandler->Destroy();
 	delete libraryHandler;
+
+	game->Destroy();
+	delete game;
 }
 
 void Application::Run() 
@@ -64,11 +71,14 @@ void Application::HandleEvents()
 
 void Application::Update()
 {
-
+	timer.Update();
+	game->Update((float)timer.GetDeltaTime());
 }
 
 void Application::Render()
 {
-
+	window->BeginRender();
+	game->Render(window->GetRenderer());
+	window->EndRender();
 }
 

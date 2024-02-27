@@ -7,12 +7,12 @@ public:
 	Timer() {}
 	~Timer() {}
 	void Update();
-	double getDeltaTime();
+	double GetDeltaTime() { return deltaTime; }
 
 private:
 	double startTime = 0.0;
 	double preTime = 0.0;
-	double DeltaTime = 0.0;
+	double deltaTime = 0.0;
 
 };
 

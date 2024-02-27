@@ -2,6 +2,8 @@
 
 #include "LibraryHandler.h"
 #include "Window.h"
+#include "Timer.h"
+#include "Game.h"
 
 class Application 
 {
@@ -22,6 +24,8 @@ private:
 	LibraryHandler* libraryHandler = nullptr;
 
 	Window* window = nullptr;
+	Timer timer; 
+	Game* game;
 
 	bool running = true;
 
