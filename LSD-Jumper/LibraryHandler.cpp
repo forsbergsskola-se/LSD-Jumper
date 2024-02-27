@@ -1,6 +1,10 @@
 #include "LibraryHandler.h"
 
 #include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_mixer.h>
+#include <SDL_ttf.h>
+
 #include <iostream>
 
 LibraryHandler::LibraryHandler()
@@ -22,22 +26,41 @@ bool LibraryHandler::Create()
 		return false;
 	}
 
-	// Initialize SDL_Image (for loading images/textures)
-	// Initialize SDL_TTF (for font files for rendering text)
-	// Initialize SDL_Mixer (for loading music and/or sounds)
+	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
+	{
+		std::cout << "SDL image failed to initialize! " << IMG_GetError();
+
+		return false;
+	}
+
+	if (TTF_Init() == -1)
+	{
+		std::cout << "SDL TTF failed to initialize! " << TTF_GetError();
+
+		return false;
+	}
+
+	if (Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG) == 0)
+	{
+		std::cout << "SDL Mix failed to initialize! " << Mix_GetError();
+
+		return false;
+	}
+
+	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048)<0)
+	{
+		std::cout << "SDL Mix failed to initialize! " << Mix_GetError();
+
+		return false;
+	}
 
 	return true;
 }
 
 void LibraryHandler::Destroy()
 {
-	// NOTE: do the destroying in the oposite way of how they were initialize
-	// This is a good programming habit to remember
-
-	// Shutdown SDL_Mixer (for loading music and/or sounds)
-	// Shutdown SDL_TTF (for font files for rendering text)
-	// Shutdown SDL_Image (for loading images/textures)
-
-	// Shutdown SDL
+	Mix_Quit();	
+	TTF_Quit();
+	IMG_Quit();
 	SDL_Quit();
 }

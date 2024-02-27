@@ -82,8 +82,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\Middleware\SDL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\Middleware\SDL\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\Middleware\SDL2\include;$(ProjectDir)\Middleware\SDL2_image\include;$(ProjectDir)\Middleware\SDL2_ttf\include;$(ProjectDir)\Middleware\SDL2_mixer\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Projects\LSD-Jumper\LSD-Jumper\Middleware\SDL2\lib\x64;C:\Projects\LSD-Jumper\LSD-Jumper\Middleware\SDL2_image\lib\x64;C:\Projects\LSD-Jumper\LSD-Jumper\Middleware\SDL2_ttf\lib\x64;C:\Projects\LSD-Jumper\LSD-Jumper\Middleware\SDL2_mixer\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -132,7 +132,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
