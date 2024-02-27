@@ -9,7 +9,7 @@
 
 LibraryHandler::LibraryHandler()
 {
-	
+	//just nothing
 }
 
 LibraryHandler::~LibraryHandler()
