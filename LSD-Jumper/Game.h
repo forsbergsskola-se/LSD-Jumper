@@ -21,8 +21,8 @@ public:
 private:
 
 	Application* application = nullptr;
-	Level* level = nullptr;
 	SDL_Texture* background = nullptr;
+	Level* level = nullptr;
 	Player* player = nullptr;
 
 };
