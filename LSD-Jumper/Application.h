@@ -24,6 +24,8 @@ public:
 	void Render();
 	void Quit();
 
+	Window* GetWindow() { return window; }
+
 	TextureHandler* GetTextureHandler() { return textureHandler; }
 
 	FontHandler* GetFontHnadler() { return fontHandler; }

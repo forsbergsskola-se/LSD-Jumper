@@ -15,7 +15,7 @@ bool Game::Create(Application* mainApplication)
 
 void Game::Destroy()
 {
-	player->Destroy(application);
+	player->Destroy();
 	delete player;
 
 	application = nullptr;
@@ -25,8 +25,6 @@ void Game::Update(const float deltaTime)
 {
 	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_ESCAPE))
 		application->Quit();
-	
-	
 
 	player->Update(deltaTime);
 }

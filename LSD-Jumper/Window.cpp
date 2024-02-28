@@ -13,13 +13,14 @@ Window::~Window()
 bool Window::Create()
 {
 	const int WIDTH = 1280;
-	const int HEIGHT = 720;
+	const int HEIGHT = 600;
 	window = SDL_CreateWindow("LSD-Jumper", // Title of the SDL window 
 		SDL_WINDOWPOS_CENTERED, //Position x of the window 
 		SDL_WINDOWPOS_CENTERED, // Position y of the window 
 		WIDTH, // Width of the window in pixels 
 		HEIGHT, // Height of the window in pixels 
-		SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN); // Additional flag(s) 
+	//	SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN); // Additional flag(s) 
+		SDL_WINDOW_SHOWN); // Additional flag(s) 
 
 
 	if (!window)
@@ -37,6 +38,9 @@ bool Window::Create()
 	}
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+	width = WIDTH;
+	height = HEIGHT;
 
 	return true;
 }
