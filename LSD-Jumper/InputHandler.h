@@ -8,6 +8,7 @@ public:
 	~InputHandler();
 	void Update();
 	bool KeyPressed(SDL_Scancode keyboardKey);
+	bool KeyHeld(SDL_Scancode keyboardKey);
 
 private:
 	bool currentKeyboardState[SDL_NUM_SCANCODES];

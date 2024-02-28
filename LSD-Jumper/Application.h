@@ -22,6 +22,9 @@ public:
 	void HandleEvents();
 	void Update();
 	void Render();
+	void Quit();
+
+	Window* GetWindow() { return window; }
 
 	TextureHandler* GetTextureHandler() { return textureHandler; }
 

@@ -29,3 +29,8 @@ bool InputHandler::KeyPressed(SDL_Scancode keyboardKey)
 {
 	return (currentKeyboardState[keyboardKey] && !prevKeyboardState[keyboardKey]);
 }
+
+bool InputHandler::KeyHeld(SDL_Scancode keyboardKey)
+{
+	return currentKeyboardState[keyboardKey];
+}

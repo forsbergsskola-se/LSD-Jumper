@@ -5,7 +5,6 @@
 Player::Player()
 {
 
-
 }
 
 Player::~Player()
@@ -13,26 +12,59 @@ Player::~Player()
 
 }
 
-bool Player::Create(Application* application)
+bool Player::Create(Application* mainApplication)
 {
-	texture = application->GetTextureHandler()->CreateTexture("Assets/Textures/smiley.png");
+	application = mainApplication;
+
+	texture = application->GetTextureHandler()->CreateTexture("Assets/Textures/character.png");
 	if (!texture)
 		return false;
+
+	rect = { 0.0f, 0.0f, 115.0f * 0.7f, 185.0f * 0.7f };
+
+	xPosition = application->GetWindow()->GetWidth() * 0.5f;
+	yPosition = application->GetWindow()->GetHeight() - rect.h;
+
+	rect.x = xPosition;
+	rect.y = yPosition;
 
 	return true;
 }
 
-void Player::Destroy(Application* application)
+void Player::Destroy()
 {
 	application->GetTextureHandler()->DestroyTexture(texture);
 }
 
 void Player::Update(const float deltaTime)
 {
+	if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_LEFT))
+	{
+		xPosition -= 200.0f * deltaTime;
+	}
 
+	else if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_RIGHT))
+	{
+		xPosition += 200.0f * deltaTime;
+	}
+
+	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE))
+	{
+		yPosition -= 150.0f;
+	}
+
+	yPosition += gravity * deltaTime;
+	
+	if (yPosition > application->GetWindow()->GetHeight() - rect.h) 
+	{
+		yPosition = rect.y;
+	}
+
+	rect.x = xPosition;
+	rect.y = yPosition;
 }
 
 void Player::Render(SDL_Renderer* renderer)
 {
-	SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+	SDL_RenderCopyF(renderer, texture, nullptr, &rect);
 }
