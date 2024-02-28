@@ -48,7 +48,18 @@ void Player::Update(const float deltaTime)
 		xPosition += 200.0f * deltaTime;
 	}
 
+	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE))
+	{
+		yPosition -= 150.0f;
+	}
+
+	yPosition += gravity * deltaTime;
 	
+	if (yPosition > application->GetWindow()->GetHeight() - rect.h) 
+	{
+		yPosition = rect.y;
+	}
+
 	rect.x = xPosition;
 	rect.y = yPosition;
 }

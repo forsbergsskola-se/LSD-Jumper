@@ -29,5 +29,6 @@ private:
 	// Player position
 	float xPosition = 0.0f;
 	float yPosition = 0.0f;
+	float gravity = 100.0f;
 
 };
