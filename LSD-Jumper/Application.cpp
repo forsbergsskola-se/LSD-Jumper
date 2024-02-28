@@ -28,6 +28,8 @@ bool Application::Create()
 
 	audioHandler = new AudioHandler;
 
+	inputhandler = new InputHandler;
+
 	game = new Game;
 	if (!game->Create(this))
 		return false;
@@ -39,6 +41,8 @@ void Application::Destroy()
 {
 	game->Destroy();
 	delete game;
+
+	delete inputhandler;
 
 	delete audioHandler;
 	
@@ -86,6 +90,7 @@ void Application::HandleEvents()
 
 void Application::Update()
 {
+	inputhandler->Update();
 	timer.Update();
 	game->Update((float)timer.GetDeltaTime());
 }

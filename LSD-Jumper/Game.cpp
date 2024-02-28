@@ -19,7 +19,10 @@ void Game::Destroy()
 
 void Game::Update(const float deltaTime)
 {
-
+	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE))
+	{
+		std::cout << "Space pressed!!" << std::endl; //just checking if the input works 
+	}
 }
 
 void Game::Render(SDL_Renderer* renderer)
