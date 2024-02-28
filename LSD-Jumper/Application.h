@@ -22,7 +22,7 @@ public:
 	void HandleEvents();
 	void Update();
 	void Render();
-	void Quit();
+	void Quit() { running = false; }
 
 	Window* GetWindow() { return window; }
 

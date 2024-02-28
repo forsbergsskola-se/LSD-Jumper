@@ -102,8 +102,3 @@ void Application::Render()
 	window->EndRender();
 }
 
-void Application::Quit()
-{
-	running = false;
-}
-

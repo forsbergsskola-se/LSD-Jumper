@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Player.h"
-
+#include "Level.h"
 #include <SDL.h>
 
 //forward declaring application, avoid multiple includes
@@ -21,7 +21,8 @@ public:
 private:
 
 	Application* application = nullptr;
-
+	SDL_Texture* background = nullptr;
+	Level* level = nullptr;
 	Player* player = nullptr;
 
 	SDL_FRect camera = {0.0f, 0.0f, 0.0f, 0.0f};
