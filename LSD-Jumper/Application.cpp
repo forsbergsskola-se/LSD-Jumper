@@ -24,6 +24,10 @@ bool Application::Create()
 	if (!textureHandler->Create(window->GetRenderer()))
 		return false;
 
+	fontHandler = new FontHandler;
+
+	audioHandler = new AudioHandler;
+
 	game = new Game;
 	if (!game->Create())
 		return false;
@@ -35,6 +39,10 @@ void Application::Destroy()
 {
 	game->Destroy();
 	delete game;
+
+	delete audioHandler;
+	
+	delete fontHandler;
 
 	textureHandler->Destroy();
 	delete textureHandler;

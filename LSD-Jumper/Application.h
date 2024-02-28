@@ -5,6 +5,8 @@
 #include "Timer.h"
 #include "Game.h"
 #include "TextureHandler.h"
+#include "FontHandler.h"
+#include "AudioHandler.h"
 
 class Application 
 {
@@ -22,6 +24,9 @@ public:
 
 	TextureHandler* GetTextureHandler() { return textureHandler; }
 
+	FontHandler* GetFontHnadler() { return fontHandler; }
+
+	AudioHandler* GetAudioHandler() { return audioHandler; }
 private:
 
 	LibraryHandler* libraryHandler = nullptr;
@@ -29,6 +34,10 @@ private:
 	Window* window = nullptr;
 
 	TextureHandler* textureHandler = nullptr;
+
+	FontHandler* fontHandler = nullptr;
+
+	AudioHandler* audioHandler = nullptr;
 
 	Game* game = nullptr;
 
