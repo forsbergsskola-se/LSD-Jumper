@@ -29,7 +29,7 @@ bool Application::Create()
 	audioHandler = new AudioHandler;
 
 	game = new Game;
-	if (!game->Create())
+	if (!game->Create(this))
 		return false;
 
 	return true;

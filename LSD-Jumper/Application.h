@@ -27,6 +27,7 @@ public:
 	FontHandler* GetFontHnadler() { return fontHandler; }
 
 	AudioHandler* GetAudioHandler() { return audioHandler; }
+
 private:
 
 	LibraryHandler* libraryHandler = nullptr;

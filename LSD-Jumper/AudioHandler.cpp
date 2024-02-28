@@ -6,7 +6,7 @@ Mix_Chunk* AudioHandler::CreateAudio(const std::string& audioName)
 	Mix_Chunk* chunk = Mix_LoadWAV(audioName.c_str());
 	if (!chunk)
 	{
-		std::cout << "Failed to load auido " << audioName.c_str() << "" << std::endl;
+		std::cout << "Failed to load audio " << audioName.c_str() << "" << std::endl;
 		std::cout << Mix_GetError() << std::endl;
 
 		return nullptr;
