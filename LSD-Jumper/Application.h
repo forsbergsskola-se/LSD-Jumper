@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Timer.h"
 #include "Game.h"
+#include "TextureHandler.h"
 
 class Application 
 {
@@ -19,13 +20,19 @@ public:
 	void Update();
 	void Render();
 
+ 
+
 private:
 
 	LibraryHandler* libraryHandler = nullptr;
 
 	Window* window = nullptr;
-	Timer timer; 
-	Game* game;
+
+	TextureHandler* textureHandler = nullptr;
+
+	Game* game = nullptr;
+
+	Timer timer;
 
 	bool running = true;
 

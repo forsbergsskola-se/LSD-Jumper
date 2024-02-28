@@ -2,6 +2,8 @@
 
 bool Game::Create()
 {
+
+
 	return true;
 }
 

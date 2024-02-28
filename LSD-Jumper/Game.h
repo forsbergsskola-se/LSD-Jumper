@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SDL.h>
 
 class Game
@@ -11,6 +12,7 @@ public:
 	void Destroy();
 	void Update(const float deltaTime);
 	void Render(SDL_Renderer* renderer);
+
 private:
 
 };

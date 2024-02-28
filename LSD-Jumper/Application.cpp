@@ -20,6 +20,10 @@ bool Application::Create()
 	if (!window->Create())
 		return false;
 
+	textureHandler = new TextureHandler;
+	if (!textureHandler->Create(window->GetRenderer()))
+		return false;
+
 	game = new Game;
 	if (!game->Create())
 		return false;
@@ -29,14 +33,17 @@ bool Application::Create()
 
 void Application::Destroy()
 {
+	game->Destroy();
+	delete game;
+
+	textureHandler->Destroy();
+	delete textureHandler;
+
 	window->Destroy();
 	delete window;
 
 	libraryHandler->Destroy();
 	delete libraryHandler;
-
-	game->Destroy();
-	delete game;
 }
 
 void Application::Run() 
