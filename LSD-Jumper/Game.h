@@ -25,5 +25,7 @@ private:
 	Level* level = nullptr;
 	Player* player = nullptr;
 
+	SDL_FRect camera = {0.0f, 0.0f, 0.0f, 0.0f};
+
 };
 
