@@ -20,4 +20,6 @@ private:
 
 	SDL_Texture* texture = nullptr;
 
+	SDL_FRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+
 };

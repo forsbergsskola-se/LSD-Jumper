@@ -19,7 +19,7 @@ bool Window::Create()
 		SDL_WINDOWPOS_CENTERED, // Position y of the window 
 		WIDTH, // Width of the window in pixels 
 		HEIGHT, // Height of the window in pixels 
-		SDL_WINDOW_SHOWN); // Additional flag(s) 
+		SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN); // Additional flag(s) 
 
 
 	if (!window)

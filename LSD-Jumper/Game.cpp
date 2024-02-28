@@ -23,6 +23,11 @@ void Game::Destroy()
 
 void Game::Update(const float deltaTime)
 {
+	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_ESCAPE))
+		application->Quit();
+	
+	
+
 	player->Update(deltaTime);
 }
 

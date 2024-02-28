@@ -101,3 +101,9 @@ void Application::Render()
 	game->Render(window->GetRenderer());
 	window->EndRender();
 }
+
+void Application::Quit()
+{
+	running = false;
+}
+
