@@ -13,7 +13,7 @@ public:
 	bool Create(Application* application);
 	void Destroy();
 	void Update(const float deltaTime);
-	void Render(SDL_Renderer* renderer);
+	void Render(SDL_Renderer* renderer, const SDL_FRect& cameraRect);
 
 private:
 

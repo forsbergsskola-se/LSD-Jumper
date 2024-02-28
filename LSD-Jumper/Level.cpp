@@ -49,7 +49,7 @@ void Level::Update(const float deltaTime)
 
 }
 
-void Level::Render(SDL_Renderer* renderer)
+void Level::Render(SDL_Renderer* renderer, const SDL_FRect& cameraRect)
 {
 	/*
 	SDL_FRect rect = {200,200,272,62};
@@ -68,6 +68,8 @@ void Level::Render(SDL_Renderer* renderer)
 	{
 	//	SDL_RenderDrawRectF(renderer, &cloudPool[i]);
 
-		SDL_RenderCopyF(renderer, cloud, nullptr, &cloudPool[i]);
+		SDL_FRect cloudRect = { cloudPool[i].x - cameraRect.x, cloudPool[i].y - cameraRect.y, cloudPool[i].w, cloudPool[i].h };
+
+		SDL_RenderCopyF(renderer, cloud, nullptr, &cloudRect);
 	}
 }

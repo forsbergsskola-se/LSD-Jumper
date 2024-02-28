@@ -18,6 +18,8 @@ bool Game::Create(Application* mainApplication)
 	if (!player->Create(mainApplication))
 		return false;
 
+	camera = { 0.0f, 0.0f,(float)application->GetWindow()->GetWidth(),(float)application->GetWindow()->GetHeight() };
+
 	return true;
 }
 
@@ -39,6 +41,12 @@ void Game::Update(const float deltaTime)
 	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_ESCAPE))
 		application->Quit();
 
+	if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_A))
+		camera.y -= 100.0f * deltaTime;
+
+	else if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_D))
+		camera.y += 100.0f * deltaTime;
+
 	player->Update(deltaTime);
 	level->Update(deltaTime);
 }
@@ -46,6 +54,7 @@ void Game::Update(const float deltaTime)
 void Game::Render(SDL_Renderer* renderer)
 {
 	SDL_RenderCopyF(renderer, background, nullptr, nullptr);
-	player->Render(renderer);
-	level->Render(renderer);
+	player->Render(renderer, camera);
+	level->Render(renderer, camera);
 }
+
