@@ -96,4 +96,3 @@ void Application::Render()
 	game->Render(window->GetRenderer());
 	window->EndRender();
 }
-

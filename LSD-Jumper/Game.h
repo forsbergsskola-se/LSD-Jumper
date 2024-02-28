@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Player.h"
+
 #include <SDL.h>
 
 //forward declaring application, avoid multiple includes
@@ -20,6 +22,7 @@ private:
 
 	Application* application = nullptr;
 
-	SDL_Texture* texture = nullptr;
+	Player* player = nullptr;
+
 };
 
