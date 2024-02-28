@@ -48,9 +48,11 @@ void Player::Update(const float deltaTime)
 		xPosition += 200.0f * deltaTime;
 	}
 
-	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE))
+	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE) && !jumping)
 	{
 		yPosition -= 150.0f;
+
+		jumping = true;
 	}
 
 	yPosition += gravity * deltaTime;
@@ -58,13 +60,18 @@ void Player::Update(const float deltaTime)
 	if (yPosition > application->GetWindow()->GetHeight() - rect.h) 
 	{
 		yPosition = rect.y;
+
+		jumping = false;
 	}
 
 	rect.x = xPosition;
 	rect.y = yPosition;
+
 }
 
-void Player::Render(SDL_Renderer* renderer)
+void Player::Render(SDL_Renderer* renderer, SDL_FRect cameraRect)
 {
-	SDL_RenderCopyF(renderer, texture, nullptr, &rect);
+	const SDL_FRect rectPlayer = { rect.x - cameraRect.x, rect.y - cameraRect.y, rect.w, rect.h };
+
+	SDL_RenderCopyF(renderer, texture, nullptr, &rectPlayer);
 }
