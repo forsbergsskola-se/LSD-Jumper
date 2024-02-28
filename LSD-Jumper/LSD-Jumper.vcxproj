@@ -89,6 +89,7 @@
     <ClInclude Include="AudioHandler.h" />
     <ClInclude Include="FontHandler.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="InputHandler.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LibraryHandler.h" />
     <ClInclude Include="Player.h" />
@@ -101,6 +102,7 @@
     <ClCompile Include="AudioHandler.cpp" />
     <ClCompile Include="FontHandler.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LibraryHandler.cpp" />
     <ClCompile Include="main.cpp" />

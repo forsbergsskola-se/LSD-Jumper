@@ -1,5 +1,6 @@
 #pragma once
 
+#include "InputHandler.h"
 #include "LibraryHandler.h"
 #include "Window.h"
 #include "Timer.h"
@@ -28,6 +29,8 @@ public:
 
 	AudioHandler* GetAudioHandler() { return audioHandler; }
 
+	InputHandler* GetInputHandler() { return inputhandler; }
+
 private:
 
 	LibraryHandler* libraryHandler = nullptr;
@@ -39,6 +42,8 @@ private:
 	FontHandler* fontHandler = nullptr;
 
 	AudioHandler* audioHandler = nullptr;
+
+	InputHandler* inputhandler = nullptr;
 
 	Game* game = nullptr;
 
