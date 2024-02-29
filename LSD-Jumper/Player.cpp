@@ -48,7 +48,6 @@ void Player::Update(const float deltaTime)
 		xPosition += 200.0f * deltaTime;
 	}
 
-	curYPosition = yPosition;
 
 	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE) && !jumping)
 	{
