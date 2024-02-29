@@ -36,37 +36,22 @@ bool Level::Create(Application* mainApplication)
 		const float cloudYStart = (windowHeight - cloudHeight) - 100.0f;
 		const float cloudY = cloudYStart - ((cloudHeight + (cloudHeight * 0.5f)) * i);
 
-		//const float cloudXStart = (windowWight * 0.5f) - (cloudWidth * 0.5f);
-
+		const float cloudXStart = (windowWight * 0.5f) - (cloudWidth * 0.5f);
 
 		int random = rand() % (max - min) + min;
 		const float cloudX = (float)random;
 
-
-
-
-
-
-
-		
+		if (i % 2 == 0)
+		{
+			//clouds go the the left between bla bal and bla bal  
+		}
+		else 
+		{
+			//clouds go to the right between bla bal and bla bla
+		}
 
 		SDL_FRect cloudRect = { cloudX, cloudY, 272, 62 };
 		cloudPool.push_back(cloudRect);
-
-		SDL_FRect preCloud = cloudRect;
-		SDL_FRect nextCloud;
-
-
-		for (size_t i = 0; i < 10; i++)
-		{
-			if(preCloud == )
-			{
-				cloudPool.push_back(preCloud); //create a cloud
-				nextCloud = preCloud;
-			}
-
-			preCloud = nextCloud; //assign the new cloud to be the preCloud
-		}
 	}
 
 	return true;

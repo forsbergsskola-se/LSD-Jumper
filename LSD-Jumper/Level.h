@@ -20,6 +20,7 @@ private:
 	Application* application = nullptr;
 	std::vector<SDL_FRect>  cloudPool;
 	SDL_Texture* cloud = nullptr;
+	std::vector<SDL_FRect> cloudColliders;
 
 };
 
