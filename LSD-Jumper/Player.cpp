@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include <iostream>
 #include "Application.h"
 
 Player::Player()
@@ -48,16 +48,26 @@ void Player::Update(const float deltaTime)
 		xPosition += 200.0f * deltaTime;
 	}
 
-	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE) && !jumping)
-	{
-		yPosition -= 150.0f;
+	curYPosition = yPosition;
 
+	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE) )
+	{
+		
 		jumping = true;
+		std::cout << "YPosition: " << yPosition << std::endl;
+ 	}
+	if (jumping) 
+	{
+		yPosition -= yVelocity - 0.2f * deltaTime;
+		if (curYPosition - yPosition == 150) 
+		{
+			jumping = false;
+		}
 	}
 
-	yPosition += gravity * deltaTime;
-	
-	if (yPosition > application->GetWindow()->GetHeight() - rect.h) 
+	yPosition += gravity * deltaTime ;
+
+	if ((yPosition > application->GetWindow()->GetHeight() - rect.h)) 
 	{
 		yPosition = rect.y;
 
