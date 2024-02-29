@@ -30,6 +30,7 @@ bool Level::Create(Application* mainApplication)
 	int min = 0;
 	int max = (windowWight - cloudWidth) - 100;
 
+
 	for (size_t i = 0; i < 10; i++)
 	{
 
@@ -38,35 +39,12 @@ bool Level::Create(Application* mainApplication)
 
 		//const float cloudXStart = (windowWight * 0.5f) - (cloudWidth * 0.5f);
 
-
 		int random = rand() % (max - min) + min;
 		const float cloudX = (float)random;
 
-
-
-
-
-
-
-		
-
 		SDL_FRect cloudRect = { cloudX, cloudY, 272, 62 };
+
 		cloudPool.push_back(cloudRect);
-
-		SDL_FRect preCloud = cloudRect;
-		SDL_FRect nextCloud;
-
-
-		for (size_t i = 0; i < 10; i++)
-		{
-			if(preCloud == )
-			{
-				cloudPool.push_back(preCloud); //create a cloud
-				nextCloud = preCloud;
-			}
-
-			preCloud = nextCloud; //assign the new cloud to be the preCloud
-		}
 	}
 
 	return true;
