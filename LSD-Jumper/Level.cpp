@@ -45,22 +45,28 @@ bool Level::Create(Application* mainApplication)
 
 
 
-		for (size_t i = 0; i < 10; i++)
-		{
-			if(preCloud == )
-			{
-				nextCloud = cloudPool.push_back(cloudrect); //create a cloud
-			}
-
-			preCloud = nextCloud; //assign the new cloud to be the preCloud
-		}
 
 
 
 		
 
 		SDL_FRect cloudRect = { cloudX, cloudY, 272, 62 };
-		SDL_FRect nextCloud = cloudPool.push_back(cloudRect);
+		cloudPool.push_back(cloudRect);
+
+		SDL_FRect preCloud = cloudRect;
+		SDL_FRect nextCloud;
+
+
+		for (size_t i = 0; i < 10; i++)
+		{
+			if(preCloud == )
+			{
+				cloudPool.push_back(preCloud); //create a cloud
+				nextCloud = preCloud;
+			}
+
+			preCloud = nextCloud; //assign the new cloud to be the preCloud
+		}
 	}
 
 	return true;
