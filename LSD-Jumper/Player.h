@@ -29,7 +29,10 @@ private:
 	// Player position
 	float xPosition = 0.0f;
 	float yPosition = 0.0f;
-	float gravity = 300.0f;
+	float gravity = 1000.0f;
+	float curYPosition = 0.0f;
+	float yVelocity = 0.0f;
+	float jumpSpeed = 500.0f;
 
 	bool jumping = false;
 

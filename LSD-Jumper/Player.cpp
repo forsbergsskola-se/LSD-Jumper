@@ -50,22 +50,17 @@ void Player::Update(const float deltaTime)
 
 	curYPosition = yPosition;
 
-	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE) )
+	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE) && !jumping)
 	{
-		
 		jumping = true;
-		std::cout << "YPosition: " << yPosition << std::endl;
- 	}
-	if (jumping) 
-	{
-		yPosition -= yVelocity - 0.2f * deltaTime;
-		if (curYPosition - yPosition == 150) 
-		{
-			jumping = false;
-		}
+		yVelocity = -jumpSpeed;
 	}
 
-	yPosition += gravity * deltaTime ;
+	if (jumping)
+	{
+		yVelocity += gravity * deltaTime;
+		yPosition += yVelocity * deltaTime;
+	}
 
 	if ((yPosition > application->GetWindow()->GetHeight() - rect.h)) 
 	{
