@@ -47,7 +47,7 @@ bool Level::Create(Application* mainApplication)
 		}
 		else 
 		{
-			//clouds go to the right between bla bal and bla blaa
+			//clouds go to the right between bla bal and bla blaaa
 		}
 
 		SDL_FRect cloudRect = { cloudX, cloudY, 272, 62 };
