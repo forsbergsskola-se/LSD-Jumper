@@ -32,7 +32,8 @@ private:
 	float gravity = 1000.0f;
 	float yVelocity = 0.0f;
 	float jumpSpeed = 500.0f;
-
+	int jumpCount;
+	int maxJumpCount;
 	bool jumping = false;
 
 };

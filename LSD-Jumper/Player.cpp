@@ -28,6 +28,9 @@ bool Player::Create(Application* mainApplication)
 	rect.x = xPosition;
 	rect.y = yPosition;
 
+	jumpCount = 0;
+	maxJumpCount = 2;
+
 	return true;
 }
 
@@ -36,41 +39,41 @@ void Player::Destroy()
 	application->GetTextureHandler()->DestroyTexture(texture);
 }
 
-void Player::Update(const float deltaTime)
-{
-	if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_LEFT))
-	{
-		xPosition -= 200.0f * deltaTime;
-	}
+void Player::Update(const float deltaTime) {
+    if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_LEFT)) 
+    {
+        xPosition -= 350.0f * deltaTime;
+    }
+    else if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_RIGHT)) 
+    {
+        xPosition += 350.0f * deltaTime;
+    }
 
-	else if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_RIGHT))
-	{
-		xPosition += 200.0f * deltaTime;
-	}
+    if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE)) 
+    {
+        if (!jumping || (jumpCount < maxJumpCount)) 
+        {
+            jumping = true;
+            yVelocity = -jumpSpeed;
+            jumpCount++; 
+        }
+    }
 
+    if (jumping) {
+        yVelocity += gravity * deltaTime;
+        yPosition += yVelocity * deltaTime;
+    }
 
-	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE) && !jumping)
-	{
-		jumping = true;
-		yVelocity = -jumpSpeed;
-	}
+    if ((yPosition > application->GetWindow()->GetHeight() - rect.h)) 
+    {
+        yPosition = application->GetWindow()->GetHeight() - rect.h;
+        yVelocity = 0.0f; 
+        jumping = false;
+        jumpCount = 0; 
+    }
 
-	if (jumping)
-	{
-		yVelocity += gravity * deltaTime;
-		yPosition += yVelocity * deltaTime;
-	}
-
-	if ((yPosition > application->GetWindow()->GetHeight() - rect.h)) 
-	{
-		yPosition = rect.y;
-
-		jumping = false;
-	}
-
-	rect.x = xPosition;
-	rect.y = yPosition;
-
+    rect.x = xPosition;
+    rect.y = yPosition;
 }
 
 void Player::Render(SDL_Renderer* renderer, SDL_FRect cameraRect)
