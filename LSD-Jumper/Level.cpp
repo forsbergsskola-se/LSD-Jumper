@@ -29,8 +29,9 @@ bool Level::Create(Application* mainApplication)
 	srand(time(NULL));
 	int min = 0;
 	int max = (windowWight - cloudWidth) - 100;
+	int cloundAmount = 20;
 
-	for (size_t i = 0; i < 10; i++)
+	for (size_t i = 0; i < cloundAmount; i++)
 	{
 
 		const float cloudYStart = (windowHeight - cloudHeight) - 100.0f;
