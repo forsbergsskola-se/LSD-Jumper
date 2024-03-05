@@ -46,8 +46,6 @@ private:
 
 	AudioHandler* audioHandler = nullptr;
 
-	Mix_Music* myMusic = nullptr;
-
 	InputHandler* inputhandler = nullptr;
 
 	Game* game = nullptr;
