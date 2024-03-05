@@ -35,6 +35,8 @@ public:
 
 	InputHandler* GetInputHandler() { return inputhandler; }
 
+	TTF_Font* GetFont() { return font; }
+
 private:
 
 	enum State

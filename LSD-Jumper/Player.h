@@ -45,6 +45,7 @@ private:
 	float yVelocity = 0.0f;
 	float movementSpeed = 350.0f;
 	float jumpStrength = 700.0f;
+	float score = 0.0f;
 
 	int direction = 1; // 0 = facing left, 1 = facing right
 

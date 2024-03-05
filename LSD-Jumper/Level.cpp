@@ -125,6 +125,7 @@ void Level::Render(SDL_Renderer* renderer, const SDL_FRect& cameraRect)
 	}
 
 	// Only for debugging
+	/*
 	for (SDL_FRect& collider : colliders)
 	{
 		SDL_FRect colliderWorld = {collider.x - cameraRect.x, collider.y - cameraRect.y, collider.w, collider.h};
@@ -132,4 +133,5 @@ void Level::Render(SDL_Renderer* renderer, const SDL_FRect& cameraRect)
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 		SDL_RenderDrawRectF(renderer, &colliderWorld);
 	}
+	*/
 }
