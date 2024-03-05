@@ -8,6 +8,7 @@
 #include "TextureHandler.h"
 #include "Timer.h"
 #include "Window.h"
+#include "Button.h"
 
 class Application 
 {
@@ -62,6 +63,9 @@ private:
 	TTF_Font* font = nullptr;
 		
 	Timer timer;
+
+	Button startGameButton;
+	Button quitButton;
 
 	State curState = State::Menu;
 

@@ -26,11 +26,25 @@ bool Application::Create()
 	if (!font)
 		return false;
 
+	const float windowWidth = (float)window->GetWidth() * 0.5f;
+	const float windowHeight = (float)window->GetHeight() * 0.5f;
+	const SDL_Color buttonBackgroundColor = { 100, 100, 100, 255 };
+	const SDL_Color buttonTextColor = { 255, 255, 255, 255 };
+	const SDL_Color buttonTextHoveredColor = { 255, 0, 0, 255 };
+
+	startGameButton.Create(window->GetRenderer(), font, "Start Game", buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor);
+	startGameButton.SetPosition(windowWidth - (startGameButton.GetWidth() * 0.5f), windowHeight - (startGameButton.GetWidth() * 0.5f) - 30.0f);
+	quitButton.Create(window->GetRenderer(), font, "Quit", buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor);
+	quitButton.SetPosition(windowWidth - (quitButton.GetWidth() * 0.5f), windowHeight - (quitButton.GetWidth() * 0.5f) + 30.0f);
+
 	return true;
 }
 
 void Application::Destroy()
 {
+	quitButton.Destroy();
+	startGameButton.Destroy();
+
 	fontHandler->DestroyFont(font);
 
 	game->Destroy();
@@ -89,16 +103,15 @@ void Application::Update()
 	{
 		case Application::Menu:
 		{
-			// if start-game button is pressed
-			//	curState = State::Play;	
+			if (quitButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+				running = false;
 
-			// If quit-button is pressed, application->Quit();
-
-			if (inputhandler->KeyPressed(SDL_SCANCODE_1))
+			if (startGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
 				curState = State::Play;
 
 			break;
 		}
+
 		case Application::Play:
 		{
 			game->Update((float)timer.GetDeltaTime());
@@ -107,6 +120,7 @@ void Application::Update()
 
 			break; 
 		}
+
 		case Application::Dead:
 		{
 			// If Play-again button is pressed, curState = State::Play;
@@ -114,6 +128,7 @@ void Application::Update()
 
 			break; 
 		}
+
 		default:
 			break;
 	}
@@ -127,26 +142,29 @@ void Application::Render()
 	{
 		case Application::Menu:
 		{
-			window->RenderText(font, "Start Game", 300, 300, {255, 255, 255, 255});
+			quitButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
+			startGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
 
 			break;
 		}
+
 		case Application::Play:
 		{
 			game->Render(window->GetRenderer());
 
 			break;
 		}
+
 		case Application::Dead:
 		{
 
 
 			break;
 		}
+
 		default:
 			break;
 	}
 	
 	window->EndRender();
 }
-
