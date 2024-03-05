@@ -49,6 +49,7 @@ bool Level::Create(Application* mainApplication)
 
 			renderRects[i] = {previousCloudXPosition + (float)xPosition, previousCloudYPosition, (float)cloudWidth, (float)cloudHeight};
 
+			// Change this so that the cloud spawns on the other side of the window or something similar
 				 if(renderRects[i].x < 0.0f)						renderRects[i].x = 0.0f;
 			else if(renderRects[i].x > (windowWidth - cloudWidth))	renderRects[i].x = windowWidth - cloudWidth;
 
@@ -64,6 +65,7 @@ bool Level::Create(Application* mainApplication)
 void Level::Destroy()
 {
 	colliders.clear();
+	renderRects.clear();
 
 	application->GetTextureHandler()->DestroyTexture(cloud);
 }
