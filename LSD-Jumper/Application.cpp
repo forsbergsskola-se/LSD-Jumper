@@ -28,6 +28,16 @@ bool Application::Create()
 
 	audioHandler = new AudioHandler;
 
+	myMusic = audioHandler->CreateMusic("Assets/Textures/ghost.wav");
+	if (!myMusic) 
+	{
+		std::cout << "Failed to load music." << std::endl;
+		return false;
+	}
+
+	Mix_PlayMusic(myMusic, -1);
+
+
 	inputhandler = new InputHandler;
 
 	game = new Game;

@@ -56,6 +56,14 @@ void Player::Update(const float deltaTime) {
             jumping = true;
             yVelocity = -jumpSpeed;
             jumpCount++; 
+
+            jumpSound = application->GetAudioHandler()->CreateAudio("Assets/Textures/jump.wav");
+            if (!jumpSound)
+            {
+                std::cout << "Failed to load sound." << std::endl;
+            }
+
+            Mix_PlayChannel (-1, jumpSound, 0);
         }
     }
 

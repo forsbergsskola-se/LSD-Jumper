@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL.h>
+#include "AudioHandler.h"
 
 class Application;
 
@@ -22,6 +23,9 @@ private:
 
 	// Player texture
 	SDL_Texture* texture = nullptr;
+
+	//Player jump sound
+	Mix_Chunk* jumpSound = nullptr;
 
 	//collider
 	SDL_FRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
