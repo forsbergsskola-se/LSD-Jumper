@@ -36,6 +36,15 @@ public:
 
 private:
 
+	enum State
+	{
+		Menu = 0,
+		Play,
+		Dead
+	};
+
+private:
+
 	LibraryHandler* libraryHandler = nullptr;
 
 	Window* window = nullptr;
@@ -50,7 +59,11 @@ private:
 
 	Game* game = nullptr;
 
+	TTF_Font* font = nullptr;
+		
 	Timer timer;
+
+	State curState = State::Menu;
 
 	bool running = true;
 

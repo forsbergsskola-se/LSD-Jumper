@@ -22,11 +22,17 @@ bool Application::Create()
 	if (!game->Create(this))
 		return false;
 
+	font = fontHandler->CreateFont("Assets/Fonts/RockwellNova-Light.ttf", 50);
+	if (!font)
+		return false;
+
 	return true;
 }
 
 void Application::Destroy()
 {
+	fontHandler->DestroyFont(font);
+
 	game->Destroy();
 	delete game;
 
@@ -78,13 +84,69 @@ void Application::Update()
 {
 	inputhandler->Update();
 	timer.Update();
-	game->Update((float)timer.GetDeltaTime());
+
+	switch (curState)
+	{
+		case Application::Menu:
+		{
+			// if start-game button is pressed
+			//	curState = State::Play;	
+
+			// If quit-button is pressed, application->Quit();
+
+			if (inputhandler->KeyPressed(SDL_SCANCODE_1))
+				curState = State::Play;
+
+			break;
+		}
+		case Application::Play:
+		{
+			game->Update((float)timer.GetDeltaTime());
+
+			// if player dies, curState = State::Dead;
+
+			break; 
+		}
+		case Application::Dead:
+		{
+			// If Play-again button is pressed, curState = State::Play;
+			// If Quit-game button is pressed, application->Quit();
+
+			break; 
+		}
+		default:
+			break;
+	}
 }
 
 void Application::Render()
 {
 	window->BeginRender();
-	game->Render(window->GetRenderer());
+	
+	switch (curState)
+	{
+		case Application::Menu:
+		{
+			window->RenderText(font, "Start Game", 300, 300, {255, 255, 255, 255});
+
+			break;
+		}
+		case Application::Play:
+		{
+			game->Render(window->GetRenderer());
+
+			break;
+		}
+		case Application::Dead:
+		{
+
+
+			break;
+		}
+		default:
+			break;
+	}
+	
 	window->EndRender();
 }
 

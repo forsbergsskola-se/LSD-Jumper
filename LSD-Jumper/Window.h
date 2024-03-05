@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include <iostream>
 
 class Window
@@ -14,6 +15,8 @@ public:
 	void Destroy();
 	void BeginRender();
 	void EndRender();
+
+	void RenderText(TTF_Font* font, const std::string& text, const float xPosition, const float yPosition, const SDL_Color& color);
 
 	SDL_Renderer* GetRenderer() {return renderer;}
 

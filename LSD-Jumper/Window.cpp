@@ -42,3 +42,27 @@ void Window::EndRender()
 {
 	SDL_RenderPresent(renderer);
 }
+
+void Window::RenderText(TTF_Font* font, const std::string& text, const float xPosition, const float yPosition, const SDL_Color& color)
+{
+	SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), { 255, 255, 255, 255 });
+	if (!surface)
+		return;
+
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+	
+	SDL_FreeSurface(surface);
+	
+	if (!texture)
+		return;
+
+	int textureWidth = 0;
+	int textureHeight = 0;
+	SDL_QueryTexture(texture, nullptr, nullptr, &textureWidth, &textureHeight);
+
+	const SDL_FRect rect = {xPosition, yPosition, textureWidth, textureHeight};
+
+	SDL_RenderCopyF(renderer, texture, nullptr, &rect);
+
+	SDL_DestroyTexture(texture);
+}

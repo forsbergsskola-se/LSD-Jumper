@@ -6,6 +6,8 @@ bool Player::Create(Application* mainApplication)
 {
 	application = mainApplication;
 
+	jumpSound = application->GetAudioHandler()->CreateAudio("Assets/Audio/jump.wav");
+
 	texture = application->GetTextureHandler()->CreateTexture("Assets/Textures/character.png");
 	if(!texture)
 		return false;
@@ -28,6 +30,7 @@ bool Player::Create(Application* mainApplication)
 void Player::Destroy()
 {
 	application->GetTextureHandler()->DestroyTexture(texture);
+	application->GetAudioHandler()->DestroyAudio(jumpSound);
 }
 
 void Player::HandleInput(const float deltaTime)
@@ -48,14 +51,11 @@ void Player::HandleInput(const float deltaTime)
 		direction = 1;
 	}
 
-	if(application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE))
+	if(application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE) && !jumping)
 	{
-		if (!jumping || (jumpCount < maxJumpCount))
-		{
-			yVelocity = -jumpStrength;
-			jumpCount++;
-			jumping = true;
-		}
+		Mix_PlayChannel(-1, jumpSound, 0);
+		yVelocity = -jumpStrength;
+		jumping = true;
 	}
 }
 
@@ -74,12 +74,10 @@ void Player::Update(const float deltaTime, const std::vector<SDL_FRect>& levelCo
 		 if (xPosition < 0.0f)						xPosition = 0.0f;
 	else if (xPosition > windowWidth - collider.w)	xPosition = windowWidth - collider.w;
 
-	// Temporary until proper collision detection is implemented
 	if(yPosition > (windowHeight - collider.h))
 	{
 		yPosition = windowHeight - collider.h;
 		yVelocity = 0.0f;
-		jumpCount = 0;
 		jumping = false;
 	}
 
@@ -95,12 +93,11 @@ void Player::Update(const float deltaTime, const std::vector<SDL_FRect>& levelCo
 				continue;
 
 			SDL_FRect intersection = {0.0f, 0.0f, 0.0f, 0.0f};
-			if(SDL_IntersectFRect(&collider, &levelCollider, &intersection))
+			if(SDL_IntersectFRect(&collider, &levelCollider, &intersection) == SDL_TRUE)
 			{
 				// Stop the player on top of the current platform
 				yPosition -= intersection.h;
 				yVelocity = 0.0f;
-				jumpCount = 0;
 				jumping = false;
 
 				SyncColliders();

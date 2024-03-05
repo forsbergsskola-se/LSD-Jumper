@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL.h>
+#include <SDL_mixer.h>
 #include <vector>
 
 class Application;
@@ -33,6 +34,8 @@ private:
 	// Player texture
 	SDL_Texture* texture = nullptr;
 
+	Mix_Chunk* jumpSound = nullptr;
+
 	SDL_FRect collider = {0.0f, 0.0f, 0.0f, 0.0f};
 
 	float xPosition = 0.0f;
@@ -43,8 +46,6 @@ private:
 	float movementSpeed = 350.0f;
 	float jumpStrength = 700.0f;
 
-	int jumpCount = 0;
-	int maxJumpCount = 2;
 	int direction = 1; // 0 = facing left, 1 = facing right
 
 	bool jumping = false;
