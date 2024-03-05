@@ -1,17 +1,7 @@
 #include "TextureHandler.h"
 
-#include <iostream>
 #include <SDL_image.h>
-
-TextureHandler::TextureHandler()
-{
-
-}
-
-TextureHandler::~TextureHandler()
-{
-
-}
+#include <iostream>
 
 bool TextureHandler::Create(SDL_Renderer* SDLRenderer)
 {
@@ -31,7 +21,7 @@ SDL_Texture* TextureHandler::CreateTexture(const std::string& fileName)
 
 	if (!texture)
 	{
-		std::cout << "Failed to load texture " << fileName.c_str() << "" << std::endl;
+		std::cout << "Error: failed to load texture" << std::endl;
 		std::cout << IMG_GetError() << std::endl;
 
 		return nullptr;

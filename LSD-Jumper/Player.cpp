@@ -2,34 +2,25 @@
 #include <iostream>
 #include "Application.h"
 
-Player::Player()
-{
-
-}
-
-Player::~Player()
-{
-
-}
-
 bool Player::Create(Application* mainApplication)
 {
 	application = mainApplication;
 
 	texture = application->GetTextureHandler()->CreateTexture("Assets/Textures/character.png");
-	if (!texture)
+	if(!texture)
 		return false;
 
-	rect = { 0.0f, 0.0f, 115.0f * 0.7f, 185.0f * 0.7f };
+	int playerWidth = 0;
+	int playerHeight = 0;
+	SDL_QueryTexture(texture, nullptr, nullptr, &playerWidth, &playerHeight);
+
+	collider = {0.0f, 0.0f, (float)(playerWidth * 0.7f), (float)(playerHeight * 0.7f)};
 
 	xPosition = application->GetWindow()->GetWidth() * 0.5f;
-	yPosition = application->GetWindow()->GetHeight() - rect.h;
+	yPosition = application->GetWindow()->GetHeight() - collider.h;
 
-	rect.x = xPosition;
-	rect.y = yPosition;
-
-	jumpCount = 0;
-	maxJumpCount = 2;
+	collider.x = xPosition;
+	collider.y = yPosition;
 
 	return true;
 }
@@ -39,46 +30,100 @@ void Player::Destroy()
 	application->GetTextureHandler()->DestroyTexture(texture);
 }
 
-void Player::Update(const float deltaTime) {
-    if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_LEFT)) 
-    {
-        xPosition -= 350.0f * deltaTime;
-    }
-    else if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_RIGHT)) 
-    {
-        xPosition += 350.0f * deltaTime;
-    }
+void Player::HandleInput(const float deltaTime)
+{
+	xVelocity = 0.0f;
 
-    if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE)) 
-    {
-        if (!jumping || (jumpCount < maxJumpCount)) 
-        {
-            jumping = true;
-            yVelocity = -jumpSpeed;
-            jumpCount++; 
-        }
-    }
+	if(application->GetInputHandler()->KeyHeld(SDL_SCANCODE_LEFT))
+	{
+		xVelocity = -movementSpeed;
 
-    if (jumping) {
-        yVelocity += gravity * deltaTime;
-        yPosition += yVelocity * deltaTime;
-    }
+		direction = 0;
+	}
 
-    if ((yPosition > application->GetWindow()->GetHeight() - rect.h)) 
-    {
-        yPosition = application->GetWindow()->GetHeight() - rect.h;
-        yVelocity = 0.0f; 
-        jumping = false;
-        jumpCount = 0; 
-    }
+	else if(application->GetInputHandler()->KeyHeld(SDL_SCANCODE_RIGHT))
+	{
+		xVelocity = movementSpeed;
 
-    rect.x = xPosition;
-    rect.y = yPosition;
+		direction = 1;
+	}
+
+	if(application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE))
+	{
+		if (!jumping || (jumpCount < maxJumpCount))
+		{
+			yVelocity = -jumpStrength;
+			jumpCount++;
+			jumping = true;
+		}
+	}
 }
 
-void Player::Render(SDL_Renderer* renderer, SDL_FRect cameraRect)
+void Player::Update(const float deltaTime, const std::vector<SDL_FRect>& levelColliders)
 {
-	const SDL_FRect rectPlayer = { rect.x - cameraRect.x, rect.y - cameraRect.y, rect.w, rect.h };
+	HandleInput(deltaTime);
 
-	SDL_RenderCopyF(renderer, texture, nullptr, &rectPlayer);
+	const float windowWidth = (float)application->GetWindow()->GetWidth();
+	const float windowHeight = (float)application->GetWindow()->GetHeight();
+
+	xPosition += xVelocity * deltaTime;
+	yVelocity += gravity * deltaTime;
+	yPosition += yVelocity * deltaTime;
+
+	// Make sure that the player can't leave the window's left- and right edges
+		 if (xPosition < 0.0f)						xPosition = 0.0f;
+	else if (xPosition > windowWidth - collider.w)	xPosition = windowWidth - collider.w;
+
+	// Temporary until proper collision detection is implemented
+	if(yPosition > (windowHeight - collider.h))
+	{
+		yPosition = windowHeight - collider.h;
+		yVelocity = 0.0f;
+		jumpCount = 0;
+		jumping = false;
+	}
+
+	SyncColliders();
+
+	// Only doing collision checking when the player is falling
+	if(yVelocity > 0.0f)
+	{
+		for(const SDL_FRect& levelCollider : levelColliders)
+		{
+			// The current level collider is above the player's bottom part so just continue without checking collision against it
+			if((levelCollider.y + levelCollider.h) < (yPosition + collider.h))
+				continue;
+
+			SDL_FRect intersection = {0.0f, 0.0f, 0.0f, 0.0f};
+			if(SDL_IntersectFRect(&collider, &levelCollider, &intersection))
+			{
+				// Stop the player on top of the current platform
+				yPosition -= intersection.h;
+				yVelocity = 0.0f;
+				jumpCount = 0;
+				jumping = false;
+
+				SyncColliders();
+
+				break;
+			}
+		}
+	}
+}
+
+void Player::Render(SDL_Renderer* renderer, const SDL_FRect& cameraRect)
+{
+	const SDL_FRect playerRectWorld = {collider.x - cameraRect.x, collider.y - cameraRect.y, collider.w, collider.h};
+
+	// Only for debugging
+	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	SDL_RenderDrawRectF(renderer, &playerRectWorld);
+
+	SDL_RenderCopyExF(renderer, texture, nullptr, &playerRectWorld, 0.0f, nullptr, ((direction == 1) ? SDL_RendererFlip::SDL_FLIP_NONE : SDL_RendererFlip::SDL_FLIP_HORIZONTAL));
+}
+
+void Player::SyncColliders()
+{
+	collider.x = xPosition;
+	collider.y = yPosition;
 }

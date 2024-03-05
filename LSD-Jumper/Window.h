@@ -1,22 +1,24 @@
 #pragma once
 
-#include <iostream>
 #include <SDL.h>
+#include <iostream>
 
 class Window
 {
 public:
-	Window();
-	~Window();
+
+	 Window() {}
+	~Window() {}
+
 	bool Create();
 	void Destroy();
 	void BeginRender();
 	void EndRender();
 
-	SDL_Renderer* GetRenderer() { return renderer; }
+	SDL_Renderer* GetRenderer() {return renderer;}
 
-	int GetWidth() { return width; }
-	int GetHeight() { return height; }
+	int GetWidth() {return width;}
+	int GetHeight() {return height;}
 
 private:
 
@@ -27,4 +29,3 @@ private:
 	int height = 0;
 
 };
-

@@ -18,13 +18,18 @@ bool Game::Create(Application* mainApplication)
 	if (!player->Create(mainApplication))
 		return false;
 
-	camera = { 0.0f, 0.0f,(float)application->GetWindow()->GetWidth(),(float)application->GetWindow()->GetHeight() };
+	Window* window = application->GetWindow();
+
+	camera = new Camera;
+	camera->Create((float)window->GetWidth(), (float)window->GetHeight());
 
 	return true;
 }
 
 void Game::Destroy()
 {
+	delete camera;
+
 	player->Destroy();
 	delete player;
 
@@ -32,29 +37,23 @@ void Game::Destroy()
 	delete level;
 
 	application->GetTextureHandler()->DestroyTexture(background);
-
 	application = nullptr;
 }
 
 void Game::Update(const float deltaTime)
 {
-	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_ESCAPE))
+	if(application->GetInputHandler()->KeyPressed(SDL_SCANCODE_ESCAPE))
 		application->Quit();
 
-	if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_A))
-		camera.y -= 100.0f * deltaTime;
-
-	else if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_D))
-		camera.y += 100.0f * deltaTime;
-
-	player->Update(deltaTime);
-	level->Update(deltaTime);
+	level->Update(camera->GetRect(), deltaTime);
+	player->Update(deltaTime, level->GetColliders());
+	camera->Update(player, deltaTime);
 }
 
 void Game::Render(SDL_Renderer* renderer)
 {
 	SDL_RenderCopyF(renderer, background, nullptr, nullptr);
-	player->Render(renderer, camera);
-	level->Render(renderer, camera);
+	player->Render(renderer, camera->GetRect());
+	level->Render(renderer, camera->GetRect());
 }
 

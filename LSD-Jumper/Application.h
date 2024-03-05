@@ -1,20 +1,20 @@
 #pragma once
 
+#include "AudioHandler.h"
+#include "FontHandler.h"
+#include "Game.h"
 #include "InputHandler.h"
 #include "LibraryHandler.h"
-#include "Window.h"
-#include "Timer.h"
-#include "Game.h"
 #include "TextureHandler.h"
-#include "FontHandler.h"
-#include "AudioHandler.h"
+#include "Timer.h"
+#include "Window.h"
 
 class Application 
 {
 public:
 
-	Application();
-	~Application();
+	 Application() {}
+	~Application() {}
 
 	bool Create();
 	void Destroy();

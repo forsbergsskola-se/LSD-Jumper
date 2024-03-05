@@ -1,39 +1,21 @@
 #include "Window.h"
 
-Window::Window()
-{
-	
-}
-Window::~Window()
-{
-
-}
-
-
 bool Window::Create()
 {
 	const int WIDTH = 1280;
-	const int HEIGHT = 600;
-	window = SDL_CreateWindow("LSD-Jumper", // Title of the SDL window 
-		SDL_WINDOWPOS_CENTERED, //Position x of the window 
-		SDL_WINDOWPOS_CENTERED, // Position y of the window 
-		WIDTH, // Width of the window in pixels 
-		HEIGHT, // Height of the window in pixels 
-	//	SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN); // Additional flag(s) 
-		SDL_WINDOW_SHOWN); // Additional flag(s) 
-
-
+	const int HEIGHT = 720;
+	window = SDL_CreateWindow("LSD-Jumper", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
 	if (!window)
 	{
-		std::cout << "Window not created! " << SDL_GetError();
+		std::cout << "Error: failed to create SDL window! " << SDL_GetError();
 		return false;
 	}
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	if (!renderer)
 	{
-		std::cout << "Renderer failed! " << SDL_GetError();
+		std::cout << "Error: failed to create SDL renderer! " << SDL_GetError();
 		return false;
 	}
 

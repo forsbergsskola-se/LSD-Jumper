@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL.h>
+#include <vector>
 
 class Application;
 
@@ -8,13 +9,22 @@ class Player
 {
 public:
 
-	Player();
-	~Player();
+	 Player() {}
+	~Player() {}
 
 	bool Create(Application* mainApplication);
 	void Destroy();
-	void Update(const float deltaTime);
-	void Render(SDL_Renderer* renderer, SDL_FRect);
+	void HandleInput(const float deltaTime);
+	void Update(const float deltaTime, const std::vector<SDL_FRect>& levelColliders);
+	void Render(SDL_Renderer* renderer, const SDL_FRect& cameraRect);
+
+	float GetYPosition() {return yPosition;}
+
+	bool GetIsJumping() {return jumping;}
+
+private:
+
+	void SyncColliders();
 
 private:
 
@@ -23,17 +33,20 @@ private:
 	// Player texture
 	SDL_Texture* texture = nullptr;
 
-	//collider
-	SDL_FRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+	SDL_FRect collider = {0.0f, 0.0f, 0.0f, 0.0f};
 
-	// Player position
 	float xPosition = 0.0f;
 	float yPosition = 0.0f;
 	float gravity = 1500.0f;
+	float xVelocity = 0.0f;
 	float yVelocity = 0.0f;
-	float jumpSpeed = 600.0f;
-	int jumpCount;
-	int maxJumpCount;
+	float movementSpeed = 350.0f;
+	float jumpStrength = 700.0f;
+
+	int jumpCount = 0;
+	int maxJumpCount = 2;
+	int direction = 1; // 0 = facing left, 1 = facing right
+
 	bool jumping = false;
 
 };

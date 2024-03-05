@@ -7,8 +7,8 @@ class TextureHandler
 {
 public:
 
-	TextureHandler();
-	~TextureHandler();
+	 TextureHandler() {}
+	~TextureHandler() {}
 
 	bool Create(SDL_Renderer* SDLRenderer);
 	void Destroy();

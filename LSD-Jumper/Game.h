@@ -1,18 +1,21 @@
 #pragma once
 
-#include "Player.h"
+#include "Camera.h"
 #include "Level.h"
+#include "Player.h"
+
 #include <SDL.h>
 
-//forward declaring application, avoid multiple includes
+// Forward-declaring application to avoid multiple inclusion issue
 class Application;
 
 class Game
 {
 public:
 
-	Game() {};
-	~Game() {};
+	 Game() {}
+	~Game() {}
+
 	bool Create(Application* mainApplication);
 	void Destroy();
 	void Update(const float deltaTime);
@@ -24,8 +27,7 @@ private:
 	SDL_Texture* background = nullptr;
 	Level* level = nullptr;
 	Player* player = nullptr;
-
-	SDL_FRect camera = {0.0f, 0.0f, 0.0f, 0.0f};
+	Camera* camera = nullptr;
 
 };
 

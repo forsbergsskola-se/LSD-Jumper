@@ -1,15 +1,5 @@
 #include "Application.h"
 
-Application::Application()
-{
-
-}
-
-Application::~Application()
- {
-
- }
-
 bool Application::Create()
 {
 	libraryHandler = new LibraryHandler;
@@ -25,9 +15,7 @@ bool Application::Create()
 		return false;
 
 	fontHandler = new FontHandler;
-
 	audioHandler = new AudioHandler;
-
 	inputhandler = new InputHandler;
 
 	game = new Game;
@@ -43,9 +31,7 @@ void Application::Destroy()
 	delete game;
 
 	delete inputhandler;
-
 	delete audioHandler;
-	
 	delete fontHandler;
 
 	textureHandler->Destroy();

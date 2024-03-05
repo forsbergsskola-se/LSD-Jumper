@@ -1,14 +1,9 @@
 #include "Level.h"
 #include "Application.h"
+
+// std::sort
+#include <algorithm>
 #include <stdlib.h>
-
-Level::Level()
-{
-}
-
-Level::~Level()
-{
-}
 
 bool Level::Create(Application* mainApplication)
 {
@@ -16,43 +11,51 @@ bool Level::Create(Application* mainApplication)
 
 	cloud = application->GetTextureHandler()->CreateTexture("Assets/Textures/cloud.png");
 	if (!cloud)
-	{
 		return false;
-	}
+
+	const float windowWidth = (float)application->GetWindow()->GetWidth();
+	const float windowHeight = (float)application->GetWindow()->GetHeight();
+
 	int cloudWidth = 0;
 	int cloudHeight = 0;
 	SDL_QueryTexture(cloud, nullptr, nullptr, &cloudWidth, &cloudHeight);
 
-	const int windowHeight = application->GetWindow()->GetHeight();
-	const int windowWight = application->GetWindow()->GetWidth();
+	// Seed the random number generator
+	srand((unsigned int)time(NULL));
 
-	srand(time(NULL));
-	int min = 0;
-	int max = (windowWight - cloudWidth) - 100;
-	int cloundAmount = 20;
+	const int numClouds = 5;
 
-	for (size_t i = 0; i < cloundAmount; i++)
+	renderRects.resize(numClouds);
+	colliders.resize(numClouds);
+
+	const int min = (int)(-cloudWidth * 1.5f);
+	const int max = (int)( cloudWidth * 1.5f);
+	float previousCloudXPosition = (windowWidth * 0.5f) - (cloudWidth * 0.5f);
+	float previousCloudYPosition = (float)(windowHeight - (cloudHeight * 2.0f));
+
+	for(int i = 0; i < numClouds; i++)
 	{
+		const float colliderHeight = cloudHeight * 0.2f;
 
-		const float cloudYStart = (windowHeight - cloudHeight) - 100.0f;
-		const float cloudY = cloudYStart - ((cloudHeight + (cloudHeight * 0.5f)) * i);
-
-		const float cloudXStart = (windowWight * 0.5f) - (cloudWidth * 0.5f);
-
-		int random = rand() % (max - min) + min;
-		const float cloudX = (float)random;
-
-		if (i % 2 == 0)
+		if(i == 0)
 		{
-			//clouds go the the left between bla bal and bla bal  
-		}
-		else 
-		{
-			//clouds go to the right between bla bal and bla blaaa
+			renderRects[i] = {previousCloudXPosition, previousCloudYPosition, (float)cloudWidth, (float)cloudHeight};
+			colliders[i] = {previousCloudXPosition, previousCloudYPosition + ((cloudHeight * 0.5f) - (colliderHeight * 0.5f)), (float)cloudWidth, colliderHeight};
 		}
 
-		SDL_FRect cloudRect = { cloudX, cloudY, 272, 62 };
-		cloudPool.push_back(cloudRect);
+		else
+		{
+			const int xPosition = rand() % (max - min) + min;
+
+			renderRects[i] = {previousCloudXPosition + (float)xPosition, previousCloudYPosition, (float)cloudWidth, (float)cloudHeight};
+
+				 if(renderRects[i].x < 0.0f)						renderRects[i].x = 0.0f;
+			else if(renderRects[i].x > (windowWidth - cloudWidth))	renderRects[i].x = windowWidth - cloudWidth;
+
+			colliders[i] = {renderRects[i].x, renderRects[i].y + ((cloudHeight * 0.5f) - (colliderHeight * 0.5f)), (float)cloudWidth, colliderHeight};
+		}
+
+		previousCloudYPosition -= (float)(cloudHeight * 2.5f);
 	}
 
 	return true;
@@ -60,35 +63,71 @@ bool Level::Create(Application* mainApplication)
 
 void Level::Destroy()
 {
+	colliders.clear();
+
 	application->GetTextureHandler()->DestroyTexture(cloud);
 }
 
-void Level::Update(const float deltaTime)
+void Level::Update(const SDL_FRect& cameraRect, const float deltaTime)
 {
+	const float windowWidth = (float)application->GetWindow()->GetWidth();
+	bool anyCloudRespawned = false;
 
+	for(int i = 0; i < renderRects.size(); i++)
+	{
+		SDL_FRect& renderRect = renderRects[i];
+		SDL_FRect& collider = colliders[i];
+
+	//	renderRect.y += cloudFallSpeed * deltaTime;
+	//	collider.y = (renderRect.y + (renderRect.h * 0.5f)) - (collider.h * 0.5f);
+
+		if(renderRect.y > (cameraRect.y + cameraRect.h))
+		{
+			const SDL_FRect lastCloud = renderRects[renderRects.size() - 1];
+			const int min = (int)(-renderRect.w * 2.0f);
+			const int max = (int)( renderRect.w * 2.0f);
+			const int xOffset = rand() % (max - min) + min;
+
+			renderRect.x = lastCloud.x + (float)xOffset;
+			renderRect.y = lastCloud.y - (renderRect.h * 2.5f);
+
+				 if(renderRect.x < 0.0f)							renderRect.x = 0.0f;
+			else if(renderRect.x > (windowWidth - renderRect.w))	renderRect.x = windowWidth - renderRect.w;
+
+			collider.x = renderRect.x;
+			collider.y = renderRect.y + ((renderRect.h * 0.5f) - (collider.h * 0.5f));
+
+			anyCloudRespawned = true;
+		}
+	}
+
+	if(anyCloudRespawned)
+	{
+		auto compareFn = [this](const SDL_FRect& rFirst, const SDL_FRect& rSecond) -> bool
+		{
+			return (rFirst.y > rSecond.y);
+		};
+
+		std::sort(renderRects.begin(), renderRects.end(), compareFn);
+		std::sort(colliders.begin(), colliders.end(), compareFn);
+	}
 }
 
 void Level::Render(SDL_Renderer* renderer, const SDL_FRect& cameraRect)
 {
-	/*
-	SDL_FRect rect = {200,200,272,62};
-	SDL_FRect rect1 = { 400,100,272,62 };
-	SDL_FRect rect2 = { 500,300,272,62 };
-	SDL_FRect rect3 = { 1000,500,272,62 };
-
-	SDL_RenderCopyF(renderer, cloud, nullptr, &rect);
-	SDL_RenderCopyF(renderer, cloud, nullptr, &rect1);
-	SDL_RenderCopyF(renderer, cloud, nullptr, &rect2);
-	SDL_RenderCopyF(renderer, cloud, nullptr, &rect3);
-	*/
-
-//	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-	for (size_t i = 0; i < cloudPool.size(); i++)
+	for (SDL_FRect& renderRect : renderRects)
 	{
-	//	SDL_RenderDrawRectF(renderer, &cloudPool[i]);
+		SDL_FRect renderRectWorld = {renderRect.x - cameraRect.x, renderRect.y - cameraRect.y, renderRect.w, renderRect.h};
 
-		SDL_FRect cloudRect = { cloudPool[i].x - cameraRect.x, cloudPool[i].y - cameraRect.y, cloudPool[i].w, cloudPool[i].h };
+		SDL_RenderCopyF(renderer, cloud, nullptr, &renderRectWorld);
+	}
 
-		SDL_RenderCopyF(renderer, cloud, nullptr, &cloudRect);
+	// Only for debugging
+	for (SDL_FRect& collider : colliders)
+	{
+		SDL_FRect colliderWorld = {collider.x - cameraRect.x, collider.y - cameraRect.y, collider.w, collider.h};
+
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		SDL_RenderDrawRectF(renderer, &colliderWorld);
 	}
 }
