@@ -20,8 +20,10 @@ public:
 	void Render(SDL_Renderer* renderer, const SDL_FRect& cameraRect);
 
 	float GetYPosition() {return yPosition;}
+	float GetScore() { return highestScore; }
 
 	bool GetIsJumping() {return jumping;}
+
 	void IsDead();
 
 private:

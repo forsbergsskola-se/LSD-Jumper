@@ -2,6 +2,16 @@
 
 bool Application::Create()
 {
+	/* TRYING TO PUT IN THE BACKGROUND FOR THE DEAD STATE
+	gameOver = GetTextureHandler()->CreateTexture("Assets/Textures/background.png");
+	std::cout << "Texture created!" << std::endl;
+	if (!gameOver)
+	{
+		std::cout << "Failed to load gameOver texture." << std::endl;
+		return false;
+	}
+	*/
+
 	libraryHandler = new LibraryHandler;
 	if (!libraryHandler->Create())
 		return false;
@@ -75,6 +85,11 @@ void Application::Destroy()
 
 	libraryHandler->Destroy();
 	delete libraryHandler;
+
+	//GameOver Texture
+	GetTextureHandler()->DestroyTexture(gameOver);
+	std::cout << "Game over texture destroyed." << std::endl;
+
 }
 
 void Application::Run() 
@@ -200,8 +215,15 @@ void Application::Render()
 
 		case Application::Dead:
 		{
+			//Render the background GAME OVER
+			SDL_RenderCopyF(renderGameOver, gameOver, nullptr, nullptr);
+
 			quitButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
 			restartGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
+
+			const std::string highestScoreText = "Highest Score: " + std::to_string((int)highestScore);
+			GetWindow()->RenderText(GetFont(), highestScoreText, (GetWindow()->GetWidth() * 0.33f), (GetWindow()->GetHeight() * 0.6f), { 0, 0, 0, 255 });
+
 
 			break;
 		}
@@ -212,4 +234,10 @@ void Application::Render()
 	
 	window->EndRender();
 }
-
+void Application::UpdateHighestScore(float score)
+{
+	if (score > highestScore)
+	{
+		highestScore = score;
+	}
+}

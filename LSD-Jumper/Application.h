@@ -24,6 +24,7 @@ public:
 	void Update();
 	void Render();
 	void Quit() { running = false; }
+	void UpdateHighestScore(float score);
 
 	Window* GetWindow() { return window; }
 
@@ -37,10 +38,6 @@ public:
 
 	TTF_Font* GetFont() { return font; }
 
-
-private:
-
-
 public:
 	enum State
 	{
@@ -50,7 +47,12 @@ public:
 	};
 
 	State curState = State::Menu;
+
 private:
+
+	SDL_Texture* gameOver = nullptr;
+
+	SDL_Renderer* renderGameOver = nullptr;
 
 	LibraryHandler* libraryHandler = nullptr;
 
@@ -81,4 +83,5 @@ private:
 
 
 	bool running = true;
+	float highestScore = 0.0f;
 };
