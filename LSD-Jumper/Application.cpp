@@ -125,26 +125,43 @@ void Application::Update()
 		}
 
 		case Application::Play:
-		{
 			game->Update((float)timer.GetDeltaTime());
-			if (restartGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
-			{
-				curState = State::Menu;
-			}
-
-			break; 
-		}
-
-		case Application::Dead:
-		{
-			// If Play-again button is pressed, curState = State::Play;
 			if (restartGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
 			{
 				curState = State::Menu;
 				game->Destroy();
 				delete game;
-				game->Render(window->GetRenderer());
+
+				game = new Game;
+				if (!game->Create(this))
+				{
+					std::cout << "Failed to create game." << std::endl;
+					return;
+				}
+
+				Render();
 			}
+			break;
+
+		case Application::Dead:
+		{
+			// If Play-again button is pressed, curState = State::Menu;
+			if (restartGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+			{
+				curState = State::Menu;
+				game->Destroy();
+				delete game;
+
+				game = new Game;
+				if (!game->Create(this))
+				{
+					std::cout << "Failed to create game." << std::endl;
+					return;
+				}
+
+				Render();
+			}
+
 
 			// If Quit-game button is pressed, application->Quit();
 			if (quitButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
