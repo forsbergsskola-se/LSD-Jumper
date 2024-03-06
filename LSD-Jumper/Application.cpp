@@ -36,12 +36,15 @@ bool Application::Create()
 	startGameButton.SetPosition(windowWidth - (startGameButton.GetWidth() * 0.5f), windowHeight - (startGameButton.GetWidth() * 0.5f) - 30.0f);
 	quitButton.Create(window->GetRenderer(), font, "Quit", buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor);
 	quitButton.SetPosition(windowWidth - (quitButton.GetWidth() * 0.5f), windowHeight - (quitButton.GetWidth() * 0.5f) + 30.0f);
+	restartGameButton.Create(window->GetRenderer(), font, "Restart", buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor);
+	restartGameButton.SetPosition(windowWidth - (restartGameButton.GetWidth() * 0.5f), windowHeight - (restartGameButton.GetWidth() * 0.5f) + 0.0f);
 
 	return true;
 }
 
 void Application::Destroy()
 {
+	restartGameButton.Destroy();
 	quitButton.Destroy();
 	startGameButton.Destroy();
 
@@ -116,7 +119,7 @@ void Application::Update()
 		{
 			game->Update((float)timer.GetDeltaTime());
 
-			// if player dies, curState = State::Dead;
+			
 
 			break; 
 		}
@@ -124,7 +127,12 @@ void Application::Update()
 		case Application::Dead:
 		{
 			// If Play-again button is pressed, curState = State::Play;
+			if (restartGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+			curState = State::Play;
+
 			// If Quit-game button is pressed, application->Quit();
+			if (quitButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+				running = false;
 
 			break; 
 		}
@@ -157,7 +165,8 @@ void Application::Render()
 
 		case Application::Dead:
 		{
-
+			restartGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
+			quitButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
 
 			break;
 		}

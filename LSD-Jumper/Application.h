@@ -67,9 +67,10 @@ private:
 	Timer timer;
 
 	Button startGameButton;
+	Button restartGameButton;
 	Button quitButton;
 
-	State curState = State::Menu;
+	State curState = State::Dead;
 
 	bool running = true;
 
