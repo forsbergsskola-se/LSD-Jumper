@@ -114,6 +114,8 @@ void Player::Update(const float deltaTime, const std::vector<SDL_FRect>& levelCo
 	}
 
 	score = (float)application->GetWindow()->GetHeight() - yPosition - collider.h;
+	if (score > highestScore)
+		highestScore = score;
 }
 
 void Player::Render(SDL_Renderer* renderer, const SDL_FRect& cameraRect)
@@ -126,9 +128,10 @@ void Player::Render(SDL_Renderer* renderer, const SDL_FRect& cameraRect)
 
 	SDL_RenderCopyExF(renderer, texture, nullptr, &playerRectWorld, 0.0f, nullptr, ((direction == 1) ? SDL_RendererFlip::SDL_FLIP_NONE : SDL_RendererFlip::SDL_FLIP_HORIZONTAL));
 
-	const std::string text = "Score: " + std::to_string((int)score);
+	const std::string highestScoreText = "Score: " + std::to_string((int)highestScore);
+	application->GetWindow()->RenderText(application->GetFont(), highestScoreText, 5.0f, 30.0f, { 0, 0, 0, 255 });
 
-	application->GetWindow()->RenderText(application->GetFont(), text, 5.0f, 5.0f, { 0, 0, 0, 255 });
+
 }
 
 void Player::SyncColliders()
