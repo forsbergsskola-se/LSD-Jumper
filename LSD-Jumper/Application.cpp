@@ -46,7 +46,7 @@ bool Application::Create()
 	quitButton.Create(window->GetRenderer(), font, "Quit", buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor);
 	quitButton.SetPosition(windowWidth - (quitButton.GetWidth() * 0.5f), windowHeight - (quitButton.GetWidth() * 0.5f) + 30.0f);
 	restartGameButton.Create(window->GetRenderer(), font, "Restart", buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor);
-	restartGameButton.SetPosition(windowWidth - (restartGameButton.GetWidth() * 0.5f), windowHeight - (restartGameButton.GetWidth() * 0.5f) + 0.0f);
+	restartGameButton.SetPosition(windowWidth - (restartGameButton.GetWidth() * 0.5f), windowHeight - (restartGameButton.GetWidth() * 0.5f) - 275.0f);
 
 	return true;
 }
@@ -127,8 +127,10 @@ void Application::Update()
 		case Application::Play:
 		{
 			game->Update((float)timer.GetDeltaTime());
-
-			
+			if (restartGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+			{
+				curState = State::Menu;
+			}
 
 			break; 
 		}
@@ -137,7 +139,12 @@ void Application::Update()
 		{
 			// If Play-again button is pressed, curState = State::Play;
 			if (restartGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
-			curState = State::Play;
+			{
+				curState = State::Menu;
+				game->Destroy();
+				delete game;
+				game->Render(window->GetRenderer());
+			}
 
 			// If Quit-game button is pressed, application->Quit();
 			if (quitButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
@@ -168,14 +175,15 @@ void Application::Render()
 		case Application::Play:
 		{
 			game->Render(window->GetRenderer());
+			restartGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
 
 			break;
 		}
 
 		case Application::Dead:
 		{
-			restartGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
 			quitButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
+			restartGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
 
 			break;
 		}

@@ -72,7 +72,7 @@ private:
 	Button restartGameButton;
 	Button quitButton;
 
-	State curState = State::Dead;
+	State curState = State::Menu;
 
 	bool running = true;
 

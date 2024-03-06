@@ -81,8 +81,8 @@ void Level::Update(const SDL_FRect& cameraRect, const float deltaTime)
 		SDL_FRect& collider = colliders[i];
 		
 		//CLOUDS FALLING
-		renderRect.y += cloudFallSpeed * deltaTime;
-		collider.y = (renderRect.y + (renderRect.h * 0.5f)) - (collider.h * 0.5f);
+		//renderRect.y += cloudFallSpeed * deltaTime;
+		//collider.y = (renderRect.y + (renderRect.h * 0.5f)) - (collider.h * 0.5f);
 
 		if(renderRect.y > (cameraRect.y + cameraRect.h))
 		{
