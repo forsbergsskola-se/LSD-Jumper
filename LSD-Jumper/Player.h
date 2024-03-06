@@ -22,6 +22,7 @@ public:
 	float GetYPosition() {return yPosition;}
 
 	bool GetIsJumping() {return jumping;}
+	void IsDead();
 
 private:
 
@@ -36,7 +37,11 @@ private:
 
 	Mix_Chunk* jumpSound = nullptr;
 
+public:
+
 	SDL_FRect collider = {0.0f, 0.0f, 0.0f, 0.0f};
+
+private:
 
 	float xPosition = 0.0f;
 	float yPosition = 0.0f;

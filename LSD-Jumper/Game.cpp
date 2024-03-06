@@ -53,7 +53,7 @@ void Game::Update(const float deltaTime)
 void Game::Render(SDL_Renderer* renderer)
 {
 	SDL_RenderCopyF(renderer, background, nullptr, nullptr);
-	player->Render(renderer, camera->GetRect());
 	level->Render(renderer, camera->GetRect());
+	player->Render(renderer, camera->GetRect());
 }
 

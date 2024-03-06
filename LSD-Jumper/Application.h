@@ -37,8 +37,11 @@ public:
 
 	TTF_Font* GetFont() { return font; }
 
+
 private:
 
+
+public:
 	enum State
 	{
 		Menu = 0,
@@ -46,6 +49,7 @@ private:
 		Dead
 	};
 
+	State curState = State::Menu;
 private:
 
 	LibraryHandler* libraryHandler = nullptr;
@@ -65,15 +69,16 @@ private:
 	Game* game = nullptr;
 
 	TTF_Font* font = nullptr;
+
+	Player* player = nullptr;
 		
 	Timer timer;
+
 
 	Button startGameButton;
 	Button restartGameButton;
 	Button quitButton;
 
-	State curState = State::Menu;
 
 	bool running = true;
-
 };

@@ -53,7 +53,8 @@ void Player::HandleInput(const float deltaTime)
 
 	if(application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE) && !jumping)
 	{
-		Mix_PlayChannel(-1, jumpSound, 0);
+		//JUMPING SOUND
+		//Mix_PlayChannel(-1, jumpSound, 0);
 		yVelocity = -jumpStrength;
 		jumping = true;
 	}
@@ -71,9 +72,11 @@ void Player::Update(const float deltaTime, const std::vector<SDL_FRect>& levelCo
 	yPosition += yVelocity * deltaTime;
 
 	// Make sure that the player can't leave the window's left- and right edges
-		 if (xPosition < 0.0f)						xPosition = 0.0f;
-	else if (xPosition > windowWidth - collider.w)	xPosition = windowWidth - collider.w;
-
+		 if (xPosition < 0.0f) 
+			 xPosition = 0.0f;
+	else if (xPosition > windowWidth - collider.w) 
+			 xPosition = windowWidth - collider.w;
+	
 	if(yPosition > (windowHeight - collider.h))
 	{
 		yPosition = windowHeight - collider.h;
@@ -132,4 +135,8 @@ void Player::SyncColliders()
 {
 	collider.x = xPosition;
 	collider.y = yPosition;
+}
+void Player::IsDead()
+{
+	application->curState = application->Dead;
 }

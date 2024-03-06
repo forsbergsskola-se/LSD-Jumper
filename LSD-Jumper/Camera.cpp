@@ -18,4 +18,7 @@ void Camera::Update(Player* player, const float deltaTime)
 
 	if (cameraRect.y > 0.0f)
 		cameraRect.y = 0.0f;
+
+	if (player->GetYPosition() > cameraRect.h + cameraRect.y - player->collider.h)
+		player->IsDead();
 }

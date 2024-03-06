@@ -25,7 +25,8 @@ bool Application::Create()
 		return false;
 	}
 
-	Mix_PlayMusic(myMusic, -1);
+	//BACKGROUND MUSIC
+	//Mix_PlayMusic(myMusic, -1);
 
 	game = new Game;
 	if (!game->Create(this))
@@ -211,3 +212,4 @@ void Application::Render()
 	
 	window->EndRender();
 }
+
