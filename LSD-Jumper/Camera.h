@@ -22,6 +22,6 @@ private:
 
 	float yPosition = 0.0f;
 	float fraction = 0.0f;
-	float easeFactor = 4.0f;
+	float easeFactor = 2.0f;
 
 };
