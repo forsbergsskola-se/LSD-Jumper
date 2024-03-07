@@ -37,6 +37,7 @@ public:
 	InputHandler* GetInputHandler() { return inputhandler; }
 
 	TTF_Font* GetFont() { return font; }
+	TTF_Font* GetNameFont() { return nameFont; }
 
 public:
 	enum State
@@ -71,6 +72,8 @@ private:
 	Game* game = nullptr;
 
 	TTF_Font* font = nullptr;
+
+	TTF_Font* nameFont = nullptr;
 
 	Player* player = nullptr;
 		

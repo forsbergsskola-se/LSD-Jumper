@@ -54,7 +54,7 @@ void Player::HandleInput(const float deltaTime)
 	if(application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE) && !jumping)
 	{
 		//JUMPING SOUND
-		//Mix_PlayChannel(-1, jumpSound, 0);
+		Mix_PlayChannel(-1, jumpSound, 0);
 		yVelocity = -jumpStrength;
 		jumping = true;
 	}

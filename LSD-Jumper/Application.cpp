@@ -44,7 +44,7 @@ bool Application::Create()
 	}
 
 	//BACKGROUND MUSIC
-	//Mix_PlayMusic(myMusic, -1);
+	Mix_PlayMusic(myMusic, -1);
 
 	game = new Game;
 	if (!game->Create(this))
@@ -53,6 +53,11 @@ bool Application::Create()
 	font = fontHandler->CreateFont("Assets/Fonts/VT323-Regular.ttf", 50);
 	if (!font)
 		return false;
+
+	nameFont = fontHandler->CreateFont("Assets/Fonts/VT323-Regular.ttf", 100);
+	if (!nameFont)
+		return false;
+
 
 	const float windowWidth = (float)window->GetWidth() * 0.5f;
 	const float windowHeight = (float)window->GetHeight() * 0.5f;
@@ -76,6 +81,7 @@ void Application::Destroy()
 	quitButton.Destroy();
 	startGameButton.Destroy();
 
+	fontHandler->DestroyFont(nameFont);
 	fontHandler->DestroyFont(font);
 
 	game->Destroy();
@@ -214,14 +220,14 @@ void Application::Render()
 			startGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
 
 			const std::string highestScoreText = "Highest Score: " + std::to_string((int)highestScore);
-			GetWindow()->RenderText(GetFont(), highestScoreText, (GetWindow()->GetWidth() * 0.35f), (GetWindow()->GetHeight() * 0.6f), { 0, 0, 0, 255 });
+			GetWindow()->RenderText(GetFont(), highestScoreText, (GetWindow()->GetWidth() * 0.37f), (GetWindow()->GetHeight() * 0.6f), { 0, 0, 0, 255 });
 			
 			//Wanted to put the name of the game
-			/*
+			
 			const std::string gameName = "LSD-JUMPER";
-			SDL_Color nameColor = { 0, 255, 255, 255 };
-			GetWindow()->RenderText(GetFont(), gameName, (GetWindow()->GetWidth() * 0.425f), (GetWindow()->GetHeight() * 0.1f), nameColor);
-			*/
+			SDL_Color nameColor = { 0, 255, 255, 255 }; // color not working
+			GetWindow()->RenderText(GetNameFont(), gameName, (GetWindow()->GetWidth() * 0.35f), (GetWindow()->GetHeight() * 0.1f), nameColor);
+			
 
 			break;
 		}
