@@ -16,16 +16,13 @@ bool Application::Create()
 	if (!textureHandler->Create(window->GetRenderer()))
 		return false;
 
-	// TRYING TO PUT IN THE BACKGROUND FOR THE DEAD STATE - ORDER MATTERS!!!! FFS BRANKO!!
 	gameOver = GetTextureHandler()->CreateTexture("Assets/Textures/gameover.png");
-	//std::cout << "Texture created!" << std::endl;		//debugging stuff
 	if (!gameOver)
 	{
 		std::cout << "Failed to load gameOver texture." << std::endl;
 		return false;
 	}
 	start = GetTextureHandler()->CreateTexture("Assets/Textures/start.png");
-	//std::cout << "Texture created!" << std::endl;		debugging stuff
 	if (!start)
 	{
 		std::cout << "Failed to load gameOver texture." << std::endl;
@@ -92,9 +89,7 @@ void Application::Destroy()
 	delete fontHandler;
 
 	GetTextureHandler()->DestroyTexture(start);
-	//std::cout << "Start texture destroyed." << std::endl;		//debugging stuff
 	GetTextureHandler()->DestroyTexture(gameOver);
-	//std::cout << "Game over texture destroyed." << std::endl;		//debugging stuff
 
 	textureHandler->Destroy();
 	delete textureHandler;
@@ -176,7 +171,6 @@ void Application::Update()
 
 		case Application::Dead:
 		{
-			// If Play-again button is pressed, curState = State::Menu;
 			if (restartGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
 			{
 				curState = State::Menu;
@@ -194,7 +188,6 @@ void Application::Update()
 			}
 
 
-			// If Quit-game button is pressed, application->Quit();
 			if (quitButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
 				running = false;
 
@@ -222,7 +215,6 @@ void Application::Render()
 			const std::string highestScoreText = "Highest Score: " + std::to_string((int)highestScore);
 			GetWindow()->RenderText(GetFont(), highestScoreText, (GetWindow()->GetWidth() * 0.37f), (GetWindow()->GetHeight() * 0.6f), { 0, 0, 0, 255 });
 			
-			//Wanted to put the name of the game
 			
 			const std::string gameName = "LSD-JUMPER";
 			SDL_Color nameColor = { 0, 255, 255, 255 }; // color not working
@@ -242,7 +234,6 @@ void Application::Render()
 
 		case Application::Dead:
 		{
-			//Render the background GAME OVER
 			SDL_RenderCopyF(window->GetRenderer(), gameOver, nullptr, nullptr);
 
 			quitButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
