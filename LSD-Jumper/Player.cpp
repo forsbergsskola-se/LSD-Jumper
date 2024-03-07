@@ -35,23 +35,22 @@ void Player::Destroy()
 
 void Player::HandleInput(const float deltaTime)
 {
-	xVelocity = 0.0f;
 
-	if(application->GetInputHandler()->KeyHeld(SDL_SCANCODE_LEFT))
+	if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_LEFT))
 	{
-		xVelocity = -movementSpeed;
-
+		xVelocity -= movementSpeed * deltaTime;
 		direction = 0;
 	}
-
-	else if(application->GetInputHandler()->KeyHeld(SDL_SCANCODE_RIGHT))
+	else if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_RIGHT))
 	{
-		xVelocity = movementSpeed;
-
+		xVelocity += movementSpeed * deltaTime;
 		direction = 1;
 	}
 
-	if(application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE) && !jumping)
+	xPosition += xVelocity * deltaTime;
+
+	// Handle jumping
+	if (/*application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE) &&*/ !jumping)        // jumping constantly
 	{
 		//JUMPING SOUND
 		Mix_PlayChannel(-1, jumpSound, 0);
@@ -59,6 +58,7 @@ void Player::HandleInput(const float deltaTime)
 		jumping = true;
 	}
 }
+
 
 void Player::Update(const float deltaTime, const std::vector<SDL_FRect>& levelColliders)
 {

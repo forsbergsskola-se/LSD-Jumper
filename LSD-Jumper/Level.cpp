@@ -18,7 +18,7 @@ bool Level::Create(Application* mainApplication)
 	int cloudWidth = 0;
 	int cloudHeight = 0;
 	SDL_QueryTexture(cloud, nullptr, nullptr, &cloudWidth, &cloudHeight);
-
+	int halfCloudWidth = 0.5 * cloudWidth;
 	// Seed the random number generator
 	srand(time(0));
 
@@ -27,9 +27,9 @@ bool Level::Create(Application* mainApplication)
 	renderRects.resize(numClouds);
 	colliders.resize(numClouds);
 
-	const int min = (int)(-cloudWidth * 1.5f);
-	const int max = (int)(cloudWidth * 1.5f);
-	float previousCloudXPosition = (windowWidth * 0.5f) - (cloudWidth * 0.5f);
+	const int maxOffset = halfCloudWidth * 3;
+	const int minOffset = -maxOffset;
+	float previousCloudXPosition = (windowWidth * 0.5f) - (halfCloudWidth);
 	float previousCloudYPosition = (float)(windowHeight - (cloudHeight * 2.0f));
 
 	for (int i = 0; i < numClouds; i++)
@@ -44,16 +44,18 @@ bool Level::Create(Application* mainApplication)
 
 		else
 		{
-			float curMin = (float)((cloudWidth * 0.5f), previousCloudXPosition + min);
-			const int xPosition = rand() % (max - (int)curMin) + (int)curMin;
+			const int curMin = std::max(0, (int)previousCloudXPosition + minOffset);
+			const int curMax = std::min((int)windowWidth-cloudWidth, (int)previousCloudXPosition + maxOffset);
 
-			renderRects[i] = { previousCloudXPosition + (float)xPosition, previousCloudYPosition, (float)cloudWidth, (float)cloudHeight };
+			const int xPosition = rand() % (curMax - curMin) + curMin;
 
-			// Change this so that the cloud spawns on the other side of the window or something similar
-			if (renderRects[i].x < 0.0f)						renderRects[i].x = 0.0f;
-			else if (renderRects[i].x > (windowWidth - cloudWidth))	renderRects[i].x = windowWidth - cloudWidth;
+			std::cout << "Cloud #" << i << " between " << curMin << " and " << curMax << ": " << xPosition << std::endl;
+
+			renderRects[i] = { (float)xPosition, previousCloudYPosition, (float)cloudWidth, (float)cloudHeight };
 
 			colliders[i] = { renderRects[i].x, renderRects[i].y + ((cloudHeight * 0.5f) - (colliderHeight * 0.5f)), (float)cloudWidth, colliderHeight };
+
+			previousCloudXPosition = xPosition;
 		}
 
 		previousCloudYPosition -= (float)(cloudHeight * 2.5f);
@@ -86,33 +88,37 @@ void Level::Update(const SDL_FRect& cameraRect, const float deltaTime)
 
 		if (renderRect.y > (cameraRect.y + cameraRect.h))
 		{
-			const SDL_FRect lastCloud = renderRects[renderRects.size() - 1];
-			const int min = (int)(-renderRect.w * 2.0f);
-			const int max = (int)(renderRect.w * 2.0f);
-			const int xOffset = rand() % (max - min) + min;
+			int lastIndex = (i - 1 + renderRects.size()) % renderRects.size();
+			std::cout << "Relocating cloud #" << i << " based on position of cloud #" << lastIndex << ".\n";
+			const SDL_FRect& lastCloud = renderRects[lastIndex ];
+			const int maxOffsetX = (lastCloud.w *0.5f) *3;
+			const int minOffsetX = -maxOffsetX;
 
-			renderRect.x = lastCloud.x + (float)xOffset;
+			const int curMinX = std::max(0, (int)lastCloud.x + minOffsetX);
+			const int curMaxX = std::min((int)(windowWidth - lastCloud.w), (int)lastCloud.x + maxOffsetX);
+
+
+			std::cout << "Here, we reposition the cloud with the old code.\n";
+			const int xPosition = rand() % (curMaxX - curMinX) + curMinX;
+
+			renderRect.x = xPosition;
 			renderRect.y = lastCloud.y - (renderRect.h * 2.5f);
 
-			if (renderRect.x < 0.0f)							renderRect.x = 0.0f;
-			else if (renderRect.x > (windowWidth - renderRect.w))	renderRect.x = windowWidth - renderRect.w;
+
+			if (renderRect.x < 0.0f)
+			{
+				renderRect.x = 0.0f;
+			}
+			else if (renderRect.x > (windowWidth - renderRect.w))
+			{
+				renderRect.x = windowWidth - renderRect.w;
+			}
 
 			collider.x = renderRect.x;
 			collider.y = renderRect.y + ((renderRect.h * 0.5f) - (collider.h * 0.5f));
 
 			anyCloudRespawned = true;
 		}
-	}
-
-	if (anyCloudRespawned)
-	{
-		auto compareFn = [this](const SDL_FRect& rFirst, const SDL_FRect& rSecond) -> bool
-			{
-				return (rFirst.y > rSecond.y);
-			};
-
-		std::sort(renderRects.begin(), renderRects.end(), compareFn);
-		std::sort(colliders.begin(), colliders.end(), compareFn);
 	}
 }
 
