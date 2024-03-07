@@ -52,8 +52,6 @@ private:
 
 	SDL_Texture* gameOver = nullptr;
 
-	SDL_Renderer* renderGameOver = nullptr;
-
 	LibraryHandler* libraryHandler = nullptr;
 
 	Window* window = nullptr;

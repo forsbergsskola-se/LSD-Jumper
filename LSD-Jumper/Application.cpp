@@ -2,7 +2,7 @@
 
 bool Application::Create()
 {
-	/* TRYING TO PUT IN THE BACKGROUND FOR THE DEAD STATE
+	/*// TRYING TO PUT IN THE BACKGROUND FOR THE DEAD STATE
 	gameOver = GetTextureHandler()->CreateTexture("Assets/Textures/background.png");
 	std::cout << "Texture created!" << std::endl;
 	if (!gameOver)
@@ -216,7 +216,7 @@ void Application::Render()
 		case Application::Dead:
 		{
 			//Render the background GAME OVER
-			SDL_RenderCopyF(renderGameOver, gameOver, nullptr, nullptr);
+			SDL_RenderCopyF(window->GetRenderer(), gameOver, nullptr, nullptr);
 
 			quitButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
 			restartGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
