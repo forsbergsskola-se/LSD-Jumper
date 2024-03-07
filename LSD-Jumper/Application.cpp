@@ -213,6 +213,16 @@ void Application::Render()
 			quitButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
 			startGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
 
+			const std::string highestScoreText = "Highest Score: " + std::to_string((int)highestScore);
+			GetWindow()->RenderText(GetFont(), highestScoreText, (GetWindow()->GetWidth() * 0.35f), (GetWindow()->GetHeight() * 0.6f), { 0, 0, 0, 255 });
+			
+			//Wanted to put the name of the game
+			/*
+			const std::string gameName = "LSD-JUMPER";
+			SDL_Color nameColor = { 0, 255, 255, 255 };
+			GetWindow()->RenderText(GetFont(), gameName, (GetWindow()->GetWidth() * 0.425f), (GetWindow()->GetHeight() * 0.1f), nameColor);
+			*/
+
 			break;
 		}
 
