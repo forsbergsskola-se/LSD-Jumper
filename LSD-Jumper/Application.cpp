@@ -50,7 +50,7 @@ bool Application::Create()
 	if (!game->Create(this))
 		return false;
 
-	font = fontHandler->CreateFont("Assets/Fonts/RockwellNova-Light.ttf", 50);
+	font = fontHandler->CreateFont("Assets/Fonts/VT323-Regular.ttf", 50);
 	if (!font)
 		return false;
 
@@ -233,7 +233,7 @@ void Application::Render()
 			restartGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
 
 			const std::string highestScoreText = "Highest Score: " + std::to_string((int)highestScore);
-			GetWindow()->RenderText(GetFont(), highestScoreText, (GetWindow()->GetWidth() * 0.33f), (GetWindow()->GetHeight() * 0.6f), { 0, 0, 0, 255 });
+			GetWindow()->RenderText(GetFont(), highestScoreText, (GetWindow()->GetWidth() * 0.35f), (GetWindow()->GetHeight() * 0.6f), { 0, 0, 0, 255 });
 
 
 			break;
