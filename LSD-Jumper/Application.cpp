@@ -2,15 +2,7 @@
 
 bool Application::Create()
 {
-	/*// TRYING TO PUT IN THE BACKGROUND FOR THE DEAD STATE
-	gameOver = GetTextureHandler()->CreateTexture("Assets/Textures/background.png");
-	std::cout << "Texture created!" << std::endl;
-	if (!gameOver)
-	{
-		std::cout << "Failed to load gameOver texture." << std::endl;
-		return false;
-	}
-	*/
+	
 
 	libraryHandler = new LibraryHandler;
 	if (!libraryHandler->Create())
@@ -23,6 +15,22 @@ bool Application::Create()
 	textureHandler = new TextureHandler;
 	if (!textureHandler->Create(window->GetRenderer()))
 		return false;
+
+	// TRYING TO PUT IN THE BACKGROUND FOR THE DEAD STATE - ORDER MATTERS!!!! FFS BRANKO!!
+	gameOver = GetTextureHandler()->CreateTexture("Assets/Textures/gameover.png");
+	//std::cout << "Texture created!" << std::endl;		//debugging stuff
+	if (!gameOver)
+	{
+		std::cout << "Failed to load gameOver texture." << std::endl;
+		return false;
+	}
+	start = GetTextureHandler()->CreateTexture("Assets/Textures/start.png");
+	//std::cout << "Texture created!" << std::endl;		debugging stuff
+	if (!start)
+	{
+		std::cout << "Failed to load gameOver texture." << std::endl;
+		return false;
+	}
 
 	fontHandler = new FontHandler;
 	audioHandler = new AudioHandler;
@@ -77,6 +85,11 @@ void Application::Destroy()
 	delete audioHandler;
 	delete fontHandler;
 
+	GetTextureHandler()->DestroyTexture(start);
+	//std::cout << "Start texture destroyed." << std::endl;		//debugging stuff
+	GetTextureHandler()->DestroyTexture(gameOver);
+	//std::cout << "Game over texture destroyed." << std::endl;		//debugging stuff
+
 	textureHandler->Destroy();
 	delete textureHandler;
 
@@ -85,10 +98,6 @@ void Application::Destroy()
 
 	libraryHandler->Destroy();
 	delete libraryHandler;
-
-	//GameOver Texture
-	GetTextureHandler()->DestroyTexture(gameOver);
-	std::cout << "Game over texture destroyed." << std::endl;
 
 }
 
@@ -199,6 +208,8 @@ void Application::Render()
 	{
 		case Application::Menu:
 		{
+			SDL_RenderCopyF(window->GetRenderer(), start, nullptr, nullptr);
+
 			quitButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
 			startGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
 
