@@ -60,7 +60,7 @@ void Window::RenderText(TTF_Font* font, const std::string& text, const float xPo
 	int textureHeight = 0;
 	SDL_QueryTexture(texture, nullptr, nullptr, &textureWidth, &textureHeight);
 
-	const SDL_FRect rect = {xPosition, yPosition, textureWidth, textureHeight};
+	const SDL_FRect rect = {xPosition, yPosition, (float)textureWidth, (float)textureHeight};
 
 	SDL_RenderCopyF(renderer, texture, nullptr, &rect);
 
