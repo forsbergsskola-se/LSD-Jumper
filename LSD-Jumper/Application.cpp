@@ -136,6 +136,23 @@ void Application::Update()
 
 	if(currentState)
 		currentState->Update((float)timer.GetDeltaTime());
+
+	// If there's a pending state
+	if(nextState)
+	{
+		// Stop/exit the current state (see 'OnExit' function in each state) 
+		if(currentState)
+			currentState->OnExit();
+
+		// Do the state change
+		currentState = nextState;
+
+		// And start/enter the new state (see 'OnEnter' function in each state) 
+		if(!currentState->OnEnter())
+			running = false;
+
+		nextState = nullptr;
+	}
 }
 
 void Application::Render()
@@ -151,6 +168,7 @@ void Application::Render()
 bool Application::SetState(const int newState)
 {
 	nextState = states[newState];
+
 	return true;
 }
 
