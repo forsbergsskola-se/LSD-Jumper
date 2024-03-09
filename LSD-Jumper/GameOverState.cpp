@@ -5,9 +5,7 @@
 
 bool GameOverState::Create(Application* mainApplication)
 {
-	std::cout << "Creating game-over state" << std::endl;
-
-	// Create objects that should created once and should persist during the lifetime of the game
+	//std::cout << "Creating game-over state" << std::endl;		//debugging stuff
 
 	application = mainApplication;
 
@@ -16,45 +14,44 @@ bool GameOverState::Create(Application* mainApplication)
 
 void GameOverState::Destroy()
 {
-	std::cout << "Destroying game-over state" << std::endl;
-
-	// Destroy objects that has been created once and should be destroyed in the end of the game's lifetime
+	//std::cout << "Destroying game-over state" << std::endl;		//debugging stuff
 
 	application = nullptr;
 }
 
 bool GameOverState::OnEnter()
 {
-	std::cout << "Entering game-over state" << std::endl;
+	//std::cout << "Entering game-over state" << std::endl;	//debugging stuff
 
-	// Create objects that should be created/started when this state is entered/started (create textures, load/start game-over music etc)
+	// Create objects that should be created when this state starts (create textures, play game-over music...)
 
 	backgroundTexture = application->GetTextureHandler()->CreateTexture("Assets/Textures/gameover.png");
 	if (!backgroundTexture)
 		return false;
 
 	music = application->GetAudioHandler()->CreateMusic("Assets/Audio/gameover.mp3");
+
 	if (!music)
 		return false;
+
+	//GAMEOVER MUSIC PLAYING========================================================================
 	Mix_PlayMusic(music, -1);
 
 	Window* window = application->GetWindow();
 	SDL_Renderer* renderer = window->GetRenderer();
 	TTF_Font* defaultFont = application->GetDefaultFont();
+
 	const float windowWidth = (float)window->GetWidth() * 0.5f;
 	const float windowHeight = (float)window->GetHeight() * 0.5f;
+
 	const SDL_Color buttonBackgroundColor = { 100, 100, 100, 255 };
 	const SDL_Color buttonTextColor = { 255, 255, 255, 255 };
 	const SDL_Color buttonTextHoveredColor = { 255, 0, 0, 255 };
 
 	const int highestScore = application->GetHighestScore();
-	std::string scoreString = "";
+	std::string scoreString;
 
-	if(highestScore == 0)
-		scoreString = "You got 0 points, bummer!";
-
-	else
-		scoreString = "Your highest score is: " + std::to_string(application->GetHighestScore()) + "!";
+	scoreString = "Your highest score is: " + std::to_string(application->GetHighestScore());
 
 	scoreBox.Create(renderer, defaultFont, scoreString, {0, 0, 0, 0,}, buttonTextColor, buttonTextColor);
 	scoreBox.SetPosition(windowWidth - (scoreBox.GetWidth() * 0.5f), windowHeight - (scoreBox.GetHeight() * 0.5f));
@@ -69,9 +66,9 @@ bool GameOverState::OnEnter()
 
 void GameOverState::OnExit()
 {
-	std::cout << "Exiting game-over state" << std::endl;
+	//std::cout << "Exiting game-over state" << std::endl;	//debugging thingy-thing
 
-	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures, unload/stop game-over music etc)
+	// Destroy objects that should be destroyed when this state is done (destroy textures, stop the game-over music...)
 
 	quitButton.Destroy();
 	restartButton.Destroy();
@@ -87,10 +84,10 @@ void GameOverState::OnExit()
 
 void GameOverState::Update(const float deltaTime)
 {
-	InputHandler* inputHandler = application->GetInputHandler();
+	InputHandler* inputHandler = application->GetInputHandler();	//another shortcut for the code below
 
 	if (restartButton.PointInside(inputHandler->GetMouseXPosition(), inputHandler->GetMouseYPosition()) && inputHandler->MouseButtonPressed(SDL_BUTTON_LEFT))
-		application->SetState(Application::EState::GAME);
+		application->SetState(Application::States::MENU);
 
 	if (quitButton.PointInside(inputHandler->GetMouseXPosition(), inputHandler->GetMouseYPosition()) && inputHandler->MouseButtonPressed(SDL_BUTTON_LEFT))
 		application->Quit();

@@ -5,10 +5,9 @@
 #include "Level.h"
 #include "Player.h"
 #include "State.h"
-
 #include <SDL_mixer.h>
 
-class GameState final : public State
+class GameState : public State
 {
 public:
 

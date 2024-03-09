@@ -6,7 +6,7 @@
 #include <SDL_mixer.h>
 #include <vector>
 
-class MenuState final : public State
+class MenuState : public State
 {
 public:
 
