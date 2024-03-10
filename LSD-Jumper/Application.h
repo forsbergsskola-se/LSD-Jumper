@@ -65,7 +65,11 @@ private:
 
 	AudioHandler* audioHandler = nullptr;
 
-	Mix_Music* myMusic = nullptr;
+	Mix_Music* menuMusic = nullptr;
+
+	Mix_Music* gameMusic = nullptr;
+
+	Mix_Music* gameOverMusic = nullptr;
 
 	InputHandler* inputhandler = nullptr;
 
@@ -86,5 +90,8 @@ private:
 
 
 	bool running = true;
+
+	bool gameOverMusicPlaying = false;
+
 	float highestScore = 0.0f;
 };

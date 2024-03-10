@@ -22,7 +22,7 @@ bool Application::Create()
 		std::cout << "Failed to load gameOver texture." << std::endl;
 		return false;
 	}
-	start = GetTextureHandler()->CreateTexture("Assets/Textures/start.png");
+	start = GetTextureHandler()->CreateTexture("Assets/Textures/menu.png");
 	if (!start)
 	{
 		std::cout << "Failed to load gameOver texture." << std::endl;
@@ -33,15 +33,31 @@ bool Application::Create()
 	audioHandler = new AudioHandler;
 	inputhandler = new InputHandler;
 
-	myMusic = audioHandler->CreateMusic("Assets/Audio/ghost.wav");
-	if (!myMusic)
+	menuMusic = audioHandler->CreateMusic("Assets/Audio/menu.mp3");
+	if (!menuMusic)
 	{
 		std::cout << "Failed to load music." << std::endl;
 		return false;
 	}
 
+	gameMusic = audioHandler->CreateMusic("Assets/Audio/game.mp3");
+	if (!gameMusic)
+	{
+		std::cout << "Failed to load music." << std::endl;
+		return false;
+	}
+
+	gameOverMusic = audioHandler->CreateMusic("Assets/Audio/gameover.mp3");
+	if (!gameOverMusic)
+	{
+		std::cout << "Failed to load game over music." << Mix_GetError() << std::endl;
+		return false;
+	}
+
 	//BACKGROUND MUSIC
-	Mix_PlayMusic(myMusic, -1);
+	//Mix_PlayMusic(menuMusic, -1);
+	//Mix_PlayMusic(gameMusic, -1);
+	//Mix_PlayMusic(gameOverMusic, -1);
 
 	game = new Game;
 	if (!game->Create(this))
@@ -139,19 +155,40 @@ void Application::Update()
 
 	switch (curState)
 	{
-		case Application::Menu:
+	case Application::Menu:
+	{
+		// Check if menu music is playing, if not... start playing it
+		if (!Mix_PlayingMusic())
 		{
-			if (quitButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
-				running = false;
-
-			if (startGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
-				curState = State::Play;
-
-			break;
+			Mix_HaltMusic();
+			Mix_PlayMusic(menuMusic, -1);
 		}
+
+		if (quitButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+			running = false;
+
+		if (startGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+		{
+			curState = State::Play;
+			// Halt menu music and start playing game music
+			Mix_HaltMusic();
+			Mix_PlayMusic(gameMusic, -1);
+		}
+
+		break;
+	}
+
 
 		case Application::Play:
 			game->Update((float)timer.GetDeltaTime());
+
+			if (!Mix_PlayingMusic())
+			{
+				Mix_HaltMusic();
+				Mix_PlayMusic(gameMusic, -1);
+			}
+
+			
 			if (restartGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
 			{
 				curState = State::Menu;
@@ -163,7 +200,11 @@ void Application::Update()
 				{
 					std::cout << "Failed to create game." << std::endl;
 					return;
+
 				}
+
+				Mix_HaltMusic();
+				Mix_PlayMusic(menuMusic, -1);
 
 				Render();
 			}
@@ -171,6 +212,22 @@ void Application::Update()
 
 		case Application::Dead:
 		{
+			//std::cout << "In Dead state!" << std::endl;
+
+			if (!gameOverMusicPlaying)	//IT WORKS!!
+			{
+				if (Mix_PlayingMusic() == 1)
+				{
+					Mix_HaltMusic();
+					std::cout << "Music halted." << std::endl;
+				}
+
+				Mix_PlayMusic(gameOverMusic, -1);
+				std::cout << "Playing gameOverMusic." << std::endl;
+
+				gameOverMusicPlaying = true;
+			}
+
 			if (restartGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
 			{
 				curState = State::Menu;
@@ -183,16 +240,18 @@ void Application::Update()
 					std::cout << "Failed to create game." << std::endl;
 					return;
 				}
+				Mix_HaltMusic();
+				Mix_PlayMusic(menuMusic, -1);
 
 				Render();
 			}
 
-
 			if (quitButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
 				running = false;
 
-			break; 
+			break;
 		}
+
 
 		default:
 			break;
