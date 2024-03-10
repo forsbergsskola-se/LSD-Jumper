@@ -54,6 +54,7 @@ void Player::HandleInput(const float deltaTime)
 	{
 		//JUMPING SOUND
 		Mix_PlayChannel(-1, jumpSound, 0);
+		Mix_VolumeChunk(jumpSound, application->volume);
 		yVelocity = -jumpStrength;
 		jumping = true;
 	}

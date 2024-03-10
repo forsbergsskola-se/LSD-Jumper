@@ -52,7 +52,7 @@ bool Application::Create()
 	{
 		std::cout << "Failed to load game over music." << Mix_GetError() << std::endl;
 		return false;
-	}
+	}	
 
 	//BACKGROUND MUSIC
 	//Mix_PlayMusic(menuMusic, -1);
@@ -162,6 +162,7 @@ void Application::Update()
 		{
 			Mix_HaltMusic();
 			Mix_PlayMusic(menuMusic, -1);
+			Mix_VolumeMusic(volume);
 		}
 
 		if (quitButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
@@ -173,6 +174,7 @@ void Application::Update()
 			// Halt menu music and start playing game music
 			Mix_HaltMusic();
 			Mix_PlayMusic(gameMusic, -1);
+			Mix_VolumeMusic(volume);
 		}
 
 		break;
@@ -186,6 +188,7 @@ void Application::Update()
 			{
 				Mix_HaltMusic();
 				Mix_PlayMusic(gameMusic, -1);
+				Mix_VolumeMusic(volume);
 			}
 
 			
@@ -205,6 +208,7 @@ void Application::Update()
 
 				Mix_HaltMusic();
 				Mix_PlayMusic(menuMusic, -1);
+				Mix_VolumeMusic(volume);
 
 				Render();
 			}
@@ -223,6 +227,7 @@ void Application::Update()
 				}
 
 				Mix_PlayMusic(gameOverMusic, -1);
+				Mix_VolumeMusic(volume);
 				std::cout << "Playing gameOverMusic." << std::endl;
 
 				gameOverMusicPlaying = true;
@@ -242,6 +247,7 @@ void Application::Update()
 				}
 				Mix_HaltMusic();
 				Mix_PlayMusic(menuMusic, -1);
+				Mix_VolumeMusic(volume);
 
 				Render();
 			}

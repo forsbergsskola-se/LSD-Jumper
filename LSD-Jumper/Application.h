@@ -39,6 +39,8 @@ public:
 	TTF_Font* GetFont() { return font; }
 	TTF_Font* GetNameFont() { return nameFont; }
 
+	int volume = 2; //=================================================== SET THE VOLUME OF THE MUSIC AND THE JUMP SOUND!!!
+
 public:
 	enum State
 	{
@@ -94,4 +96,6 @@ private:
 	bool gameOverMusicPlaying = false;
 
 	float highestScore = 0.0f;
+
+
 };
