@@ -12,19 +12,17 @@ bool Player::Create(Application* mainApplication)
 	if(!texture)
 		return false;
 
-	Window* window = application->GetWindow();		//creating the shortcut instead of writing application->GetWindow()-> ...
-
 	int playerWidth = 0;
 	int playerHeight = 0;
 	SDL_QueryTexture(texture, nullptr, nullptr, &playerWidth, &playerHeight);
 
-	collider.w = (float)(playerWidth * 0.7f);		//instead of asigning to the collider we asign each W and H to the collider separately
-	collider.h = (float)(playerHeight * 0.7f);
+	collider = {0.0f, 0.0f, (float)(playerWidth * 0.7f), (float)(playerHeight * 0.7f)};
 
-	xPosition = window->GetWidth() * 0.5f;
-	yPosition = window->GetHeight() - collider.h;
+	xPosition = application->GetWindow()->GetWidth() * 0.5f;
+	yPosition = application->GetWindow()->GetHeight() - collider.h;
 
-	SyncColliders();
+	collider.x = xPosition;
+	collider.y = yPosition;
 
 	return true;
 }
@@ -37,15 +35,13 @@ void Player::Destroy()
 
 void Player::HandleInput(const float deltaTime)
 {
-	InputHandler* inputHandler = application->GetInputHandler();		//creating the shortcut
 
-	if(inputHandler->KeyHeld(SDL_SCANCODE_LEFT))
+	if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_LEFT))
 	{
 		xVelocity -= movementSpeed * deltaTime;
 		direction = 0;
 	}
-
-	else if(inputHandler->KeyHeld(SDL_SCANCODE_RIGHT))
+	else if (application->GetInputHandler()->KeyHeld(SDL_SCANCODE_RIGHT))
 	{
 		xVelocity += movementSpeed * deltaTime;
 		direction = 1;
@@ -53,8 +49,10 @@ void Player::HandleInput(const float deltaTime)
 
 	xPosition += xVelocity * deltaTime;
 
-	if(/*inputHandler->KeyPressed(SDL_SCANCODE_SPACE) &&*/ !jumping)		//always jumping
+	// Handle jumping
+	if (/*application->GetInputHandler()->KeyPressed(SDL_SCANCODE_SPACE) &&*/ !jumping)        // jumping constantly
 	{
+		//JUMPING SOUND
 		Mix_PlayChannel(-1, jumpSound, 0);
 		yVelocity = -jumpStrength;
 		jumping = true;
@@ -66,20 +64,19 @@ void Player::Update(const float deltaTime, const std::vector<SDL_FRect>& levelCo
 {
 	HandleInput(deltaTime);
 
-	Window* window = application->GetWindow();		//another window shortcut
-	const float windowWidth = (float)window->GetWidth();
-	const float windowHeight = (float)window->GetHeight();
+	const float windowWidth = (float)application->GetWindow()->GetWidth();
+	const float windowHeight = (float)application->GetWindow()->GetHeight();
 
 	xPosition += xVelocity * deltaTime;
 	yVelocity += gravity * deltaTime;
 	yPosition += yVelocity * deltaTime;
 
 	// Make sure that the player can't leave the window's left- and right edges
-	if (xPosition < 0.0f) 
-		xPosition = 0.0f;
+		 if (xPosition < 0.0f) 
+			 xPosition = 0.0f;
 	else if (xPosition > windowWidth - collider.w) 
-		xPosition = windowWidth - collider.w;
-
+			 xPosition = windowWidth - collider.w;
+	
 	if(yPosition > (windowHeight - collider.h))
 	{
 		yPosition = windowHeight - collider.h;
@@ -116,20 +113,34 @@ void Player::Update(const float deltaTime, const std::vector<SDL_FRect>& levelCo
 		}
 	}
 
-	score = (float)windowHeight - yPosition - collider.h;
-
+	score = (float)application->GetWindow()->GetHeight() - yPosition - collider.h;
 	if (score > highestScore)
 		highestScore = score;
+	application->UpdateHighestScore(highestScore);
 }
 
 void Player::Render(SDL_Renderer* renderer, const SDL_FRect& cameraRect)
 {
 	const SDL_FRect playerRectWorld = {collider.x - cameraRect.x, collider.y - cameraRect.y, collider.w, collider.h};
+
+	// Only for debugging
+	//SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	//SDL_RenderDrawRectF(renderer, &playerRectWorld);
+
 	SDL_RenderCopyExF(renderer, texture, nullptr, &playerRectWorld, 0.0f, nullptr, ((direction == 1) ? SDL_RendererFlip::SDL_FLIP_NONE : SDL_RendererFlip::SDL_FLIP_HORIZONTAL));
+
+	const std::string highestScoreText = "Score: " + std::to_string((int)highestScore);
+	application->GetWindow()->RenderText(application->GetFont(), highestScoreText, 5.0f, 5.0f, { 0, 0, 0, 255 });
+
+
 }
 
 void Player::SyncColliders()
 {
 	collider.x = xPosition;
 	collider.y = yPosition;
+}
+void Player::IsDead()
+{
+	application->curState = application->Dead;
 }

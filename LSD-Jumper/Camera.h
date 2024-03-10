@@ -20,6 +20,7 @@ private:
 
 	SDL_FRect cameraRect = {0.0f, 0.0f, 0.0f, 0.0f};
 
+	float yPosition = 0.0f;
 	float fraction = 0.0f;
 	float easeFactor = 2.0f;
 

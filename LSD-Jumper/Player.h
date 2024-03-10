@@ -19,14 +19,12 @@ public:
 	void Update(const float deltaTime, const std::vector<SDL_FRect>& levelColliders);
 	void Render(SDL_Renderer* renderer, const SDL_FRect& cameraRect);
 
-public:
-
-	// Getters/Setters
-
-	SDL_FRect& GetCollider() {return collider;}		//making a getter instead of making a collider public
-
 	float GetYPosition() {return yPosition;}
-	float GetScore() {return highestScore;}
+	float GetScore() { return highestScore; }
+
+	bool GetIsJumping() {return jumping;}
+
+	void IsDead();
 
 private:
 
@@ -36,11 +34,16 @@ private:
 
 	Application* application = nullptr;
 
+	// Player texture
 	SDL_Texture* texture = nullptr;
 
 	Mix_Chunk* jumpSound = nullptr;
 
+public:
+
 	SDL_FRect collider = {0.0f, 0.0f, 0.0f, 0.0f};
+
+private:
 
 	float xPosition = 0.0f;
 	float yPosition = 0.0f;

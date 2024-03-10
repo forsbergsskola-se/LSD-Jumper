@@ -1,5 +1,4 @@
 #include "Level.h"
-
 #include "Application.h"
 #include <time.h>
 #include <algorithm>
@@ -28,8 +27,8 @@ bool Level::Create(Application* mainApplication)
 	renderRects.resize(numClouds);
 	colliders.resize(numClouds);
 
-	const float maxOffset = halfCloudWidth * 3.0f;
-	const float minOffset = -maxOffset;
+	const int maxOffset = halfCloudWidth * 3;
+	const int minOffset = -maxOffset;
 	float previousCloudXPosition = (windowWidth * 0.5f) - (halfCloudWidth);
 	float previousCloudYPosition = (float)(windowHeight - (cloudHeight * 2.0f));
 
@@ -45,17 +44,18 @@ bool Level::Create(Application* mainApplication)
 
 		else
 		{
-			const float curMin = std::max(0.0f, (int)previousCloudXPosition + minOffset);
-			const float curMax = std::min(windowWidth-cloudWidth, previousCloudXPosition + maxOffset);
+			const int curMin = std::max(0, (int)previousCloudXPosition + minOffset);
+			const int curMax = std::min((int)windowWidth-cloudWidth, (int)previousCloudXPosition + maxOffset);
 
-			const int xPosition = rand() % (int)(curMax - curMin) + (int)curMin;
+			const int xPosition = rand() % (curMax - curMin) + curMin;
+
 			std::cout << "Cloud #" << i << " between " << curMin << " and " << curMax << ": " << xPosition << std::endl;
 
 			renderRects[i] = { (float)xPosition, previousCloudYPosition, (float)cloudWidth, (float)cloudHeight };
 
 			colliders[i] = { renderRects[i].x, renderRects[i].y + ((cloudHeight * 0.5f) - (colliderHeight * 0.5f)), (float)cloudWidth, colliderHeight };
 
-			previousCloudXPosition = (float)xPosition;
+			previousCloudXPosition = xPosition;
 		}
 
 		previousCloudYPosition -= (float)(cloudHeight * 2.5f);
@@ -70,7 +70,6 @@ void Level::Destroy()
 	renderRects.clear();
 
 	application->GetTextureHandler()->DestroyTexture(cloud);
-	cloud = nullptr;
 }
 
 void Level::Update(const SDL_FRect& cameraRect, const float deltaTime)
@@ -91,24 +90,29 @@ void Level::Update(const SDL_FRect& cameraRect, const float deltaTime)
 		{
 			int lastIndex = (i - 1 + renderRects.size()) % renderRects.size();
 			std::cout << "Relocating cloud #" << i << " based on position of cloud #" << lastIndex << ".\n";
-			const SDL_FRect& lastCloud = renderRects[lastIndex];
-			const int maxOffsetX = (lastCloud.w * 0.5f) * 3;
+			const SDL_FRect& lastCloud = renderRects[lastIndex ];
+			const int maxOffsetX = (lastCloud.w *0.5f) *3;
 			const int minOffsetX = -maxOffsetX;
 
 			const int curMinX = std::max(0, (int)lastCloud.x + minOffsetX);
 			const int curMaxX = std::min((int)(windowWidth - lastCloud.w), (int)lastCloud.x + maxOffsetX);
 
+
 			std::cout << "Here, we reposition the cloud with the old code.\n";
-			const float xPosition = (float)(rand() % (int)(curMaxX - curMinX) + (int)curMinX);
+			const int xPosition = rand() % (curMaxX - curMinX) + curMinX;
 
 			renderRect.x = xPosition;
 			renderRect.y = lastCloud.y - (renderRect.h * 2.5f);
 
-			if (renderRect.x < 0.0f)
-				renderRect.x = 0.0f;
 
+			if (renderRect.x < 0.0f)
+			{
+				renderRect.x = 0.0f;
+			}
 			else if (renderRect.x > (windowWidth - renderRect.w))
+			{
 				renderRect.x = windowWidth - renderRect.w;
+			}
 
 			collider.x = renderRect.x;
 			collider.y = renderRect.y + ((renderRect.h * 0.5f) - (collider.h * 0.5f));
@@ -126,4 +130,15 @@ void Level::Render(SDL_Renderer* renderer, const SDL_FRect& cameraRect)
 
 		SDL_RenderCopyF(renderer, cloud, nullptr, &renderRectWorld);
 	}
+
+	// Only for debugging
+	/*
+	for (SDL_FRect& collider : colliders)
+	{
+		SDL_FRect colliderWorld = {collider.x - cameraRect.x, collider.y - cameraRect.y, collider.w, collider.h};
+
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		SDL_RenderDrawRectF(renderer, &colliderWorld);
+	}
+	*/
 }

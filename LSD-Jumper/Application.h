@@ -2,28 +2,19 @@
 
 #include "AudioHandler.h"
 #include "FontHandler.h"
+#include "Game.h"
 #include "InputHandler.h"
 #include "LibraryHandler.h"
-#include "State.h"
 #include "TextureHandler.h"
 #include "Timer.h"
 #include "Window.h"
+#include "Button.h"
 
 class Application 
 {
 public:
 
-	enum EState
-	{
-		MENU = 0,
-		GAME,
-		GAME_OVER,
-		NUM_STATES
-	};
-
-public:
-
-	 Application();
+	 Application() {}
 	~Application() {}
 
 	bool Create();
@@ -32,48 +23,68 @@ public:
 	void HandleEvents();
 	void Update();
 	void Render();
-
-	bool SetState(const int newState);
-
-	void EndRound(const int score);
-
-public:
-
-	// Getters/Setters
-
-	TextureHandler* GetTextureHandler() {return textureHandler;}
-	FontHandler* GetFontHandler() {return fontHandler;}
-	AudioHandler* GetAudioHandler() {return audioHandler;}
-	InputHandler* GetInputHandler() {return inputHandler;}
+	void Quit() { running = false; }
+	void UpdateHighestScore(float score);
 
 	Window* GetWindow() { return window; }
 
-	TTF_Font* GetDefaultFont() {return defaultFont;}
+	TextureHandler* GetTextureHandler() { return textureHandler; }
 
-	int GetHighestScore() {return highestScore;}
+	FontHandler* GetFontHnadler() { return fontHandler; }
 
-	void Quit() {running = false;}
+	AudioHandler* GetAudioHandler() { return audioHandler; }
+
+	InputHandler* GetInputHandler() { return inputhandler; }
+
+	TTF_Font* GetFont() { return font; }
+	TTF_Font* GetNameFont() { return nameFont; }
+
+public:
+	enum State
+	{
+		Menu = 0,
+		Play,
+		Dead
+	};
+
+	State curState = State::Menu;
 
 private:
 
+	SDL_Texture* gameOver = nullptr;
+
+	SDL_Texture* start = nullptr;
+
 	LibraryHandler* libraryHandler = nullptr;
-	TextureHandler* textureHandler = nullptr;
-	FontHandler* fontHandler = nullptr;
-	AudioHandler* audioHandler = nullptr;
-	InputHandler* inputHandler = nullptr;
 
 	Window* window = nullptr;
 
-	TTF_Font* defaultFont = nullptr;
+	TextureHandler* textureHandler = nullptr;
 
-	State* states[NUM_STATES] = {nullptr};
-	State* currentState = nullptr;
-	State* nextState = nullptr;
+	FontHandler* fontHandler = nullptr;
 
+	AudioHandler* audioHandler = nullptr;
+
+	Mix_Music* myMusic = nullptr;
+
+	InputHandler* inputhandler = nullptr;
+
+	Game* game = nullptr;
+
+	TTF_Font* font = nullptr;
+
+	TTF_Font* nameFont = nullptr;
+
+	Player* player = nullptr;
+		
 	Timer timer;
 
-	int highestScore = 0;
+
+	Button startGameButton;
+	Button restartGameButton;
+	Button quitButton;
+
 
 	bool running = true;
-
+	float highestScore = 0.0f;
 };

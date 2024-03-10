@@ -10,11 +10,15 @@ void Camera::Create(const float windowWidth, const float windowHeight)
 void Camera::Update(Player* player, const float deltaTime)
 {
 	// Smoothly move the camera up towards the player when the player has landed on a cloud platform
-	const float positionDifference = (player->GetYPosition() - (cameraRect.h * 0.5f)) - cameraRect.y;
-	const float softPosition = cameraRect.y + positionDifference * deltaTime * easeFactor;
+	const float positionDifference = (player->GetYPosition() - (cameraRect.h * 0.5f)) - yPosition;
+	const float softPosition = yPosition + positionDifference * deltaTime * easeFactor;
 
-	cameraRect.y = softPosition;
+	yPosition = softPosition;
+	cameraRect.y = yPosition;
 
 	if (cameraRect.y > 0.0f)
 		cameraRect.y = 0.0f;
+
+	if (player->GetYPosition() > cameraRect.h + cameraRect.y - player->collider.h)
+		player->IsDead();
 }

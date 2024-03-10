@@ -1,22 +1,9 @@
 #include "Application.h"
 
-#include "MenuState.h"
-#include "GameState.h"
-#include "GameOverState.h"
-
-Application::Application()
-{
-	// Seed the random number generator
-	srand((unsigned int)time(0));
-
-	for(int i = 0; i < EState::NUM_STATES; ++i)
-	{
-		states[i] = nullptr;
-	}
-}
-
 bool Application::Create()
 {
+	
+
 	libraryHandler = new LibraryHandler;
 	if (!libraryHandler->Create())
 		return false;
@@ -25,78 +12,94 @@ bool Application::Create()
 	if (!window->Create())
 		return false;
 
-	defaultFont = fontHandler->CreateFont("Assets/Fonts/VT323-Regular.ttf", 50);
-	if (!defaultFont)
-		return false;
-
 	textureHandler = new TextureHandler;
 	if (!textureHandler->Create(window->GetRenderer()))
 		return false;
 
+	gameOver = GetTextureHandler()->CreateTexture("Assets/Textures/gameover.png");
+	if (!gameOver)
+	{
+		std::cout << "Failed to load gameOver texture." << std::endl;
+		return false;
+	}
+	start = GetTextureHandler()->CreateTexture("Assets/Textures/start.png");
+	if (!start)
+	{
+		std::cout << "Failed to load gameOver texture." << std::endl;
+		return false;
+	}
+
 	fontHandler = new FontHandler;
 	audioHandler = new AudioHandler;
-	inputHandler = new InputHandler;
+	inputhandler = new InputHandler;
 
-	State* menuState = new MenuState;
-	if(!menuState->Create(this))
+	myMusic = audioHandler->CreateMusic("Assets/Audio/ghost.wav");
+	if (!myMusic)
+	{
+		std::cout << "Failed to load music." << std::endl;
+		return false;
+	}
+
+	//BACKGROUND MUSIC
+	Mix_PlayMusic(myMusic, -1);
+
+	game = new Game;
+	if (!game->Create(this))
 		return false;
 
-	State* gameState = new GameState;
-	if(!gameState->Create(this))
+	font = fontHandler->CreateFont("Assets/Fonts/VT323-Regular.ttf", 50);
+	if (!font)
 		return false;
 
-	State* gameOverState = new GameOverState;
-	if(!gameOverState->Create(this))
+	nameFont = fontHandler->CreateFont("Assets/Fonts/VT323-Regular.ttf", 100);
+	if (!nameFont)
 		return false;
 
-	states[EState::MENU] = menuState;
-	states[EState::GAME] = gameState;
-	states[EState::GAME_OVER] = gameOverState;
 
-	// Set the start state
-	currentState = states[EState::MENU];
-	if(!currentState->OnEnter())
-		return false;
+	const float windowWidth = (float)window->GetWidth() * 0.5f;
+	const float windowHeight = (float)window->GetHeight() * 0.5f;
+	const SDL_Color buttonBackgroundColor = { 100, 100, 100, 255 };
+	const SDL_Color buttonTextColor = { 255, 255, 255, 255 };
+	const SDL_Color buttonTextHoveredColor = { 255, 0, 0, 255 };
+
+	startGameButton.Create(window->GetRenderer(), font, "Start Game", buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor);
+	startGameButton.SetPosition(windowWidth - (startGameButton.GetWidth() * 0.5f), windowHeight - (startGameButton.GetWidth() * 0.5f) - 30.0f);
+	quitButton.Create(window->GetRenderer(), font, "Quit", buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor);
+	quitButton.SetPosition(windowWidth - (quitButton.GetWidth() * 0.5f), windowHeight - (quitButton.GetWidth() * 0.5f) + 30.0f);
+	restartGameButton.Create(window->GetRenderer(), font, "Restart", buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor);
+	restartGameButton.SetPosition(windowWidth - (restartGameButton.GetWidth() * 0.5f), windowHeight - (restartGameButton.GetWidth() * 0.5f) - 275.0f);
 
 	return true;
 }
 
 void Application::Destroy()
 {
-	if(currentState)
-		currentState->OnExit();
+	restartGameButton.Destroy();
+	quitButton.Destroy();
+	startGameButton.Destroy();
 
-	for(int i = 0; i < EState::NUM_STATES; ++i)
-	{
-		if(states[i])
-		{
-			states[i]->Destroy();
-			delete states[i];
-			states[i] = nullptr;
-		}
-	}
+	fontHandler->DestroyFont(nameFont);
+	fontHandler->DestroyFont(font);
 
-	delete inputHandler;
+	game->Destroy();
+	delete game;
+
+	delete inputhandler;
 	delete audioHandler;
 	delete fontHandler;
-	inputHandler = nullptr;
-	audioHandler = nullptr;
-	fontHandler = nullptr;
+
+	GetTextureHandler()->DestroyTexture(start);
+	GetTextureHandler()->DestroyTexture(gameOver);
 
 	textureHandler->Destroy();
 	delete textureHandler;
-	textureHandler = nullptr;
-
-	fontHandler->DestroyFont(defaultFont);
-	defaultFont = nullptr;
 
 	window->Destroy();
 	delete window;
-	window = nullptr;
 
 	libraryHandler->Destroy();
 	delete libraryHandler;
-	libraryHandler = nullptr;
+
 }
 
 void Application::Run() 
@@ -131,54 +134,128 @@ void Application::HandleEvents()
 
 void Application::Update()
 {
-	inputHandler->Update();
+	inputhandler->Update();
 	timer.Update();
 
-	if(currentState)
-		currentState->Update((float)timer.GetDeltaTime());
-
-	// If there's a pending state
-	if(nextState)
+	switch (curState)
 	{
-		// Stop/exit the current state (see 'OnExit' function in each state) 
-		if(currentState)
-			currentState->OnExit();
+		case Application::Menu:
+		{
+			if (quitButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+				running = false;
 
-		// Do the state change
-		currentState = nextState;
+			if (startGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+				curState = State::Play;
 
-		// And start/enter the new state (see 'OnEnter' function in each state) 
-		if(!currentState->OnEnter())
-			running = false;
+			break;
+		}
 
-		nextState = nullptr;
+		case Application::Play:
+			game->Update((float)timer.GetDeltaTime());
+			if (restartGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+			{
+				curState = State::Menu;
+				game->Destroy();
+				delete game;
+
+				game = new Game;
+				if (!game->Create(this))
+				{
+					std::cout << "Failed to create game." << std::endl;
+					return;
+				}
+
+				Render();
+			}
+			break;
+
+		case Application::Dead:
+		{
+			if (restartGameButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+			{
+				curState = State::Menu;
+				game->Destroy();
+				delete game;
+
+				game = new Game;
+				if (!game->Create(this))
+				{
+					std::cout << "Failed to create game." << std::endl;
+					return;
+				}
+
+				Render();
+			}
+
+
+			if (quitButton.PointInside(inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition()) && inputhandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+				running = false;
+
+			break; 
+		}
+
+		default:
+			break;
 	}
 }
 
 void Application::Render()
 {
 	window->BeginRender();
+	
+	switch (curState)
+	{
+		case Application::Menu:
+		{
+			SDL_RenderCopyF(window->GetRenderer(), start, nullptr, nullptr);
 
-	if(currentState)
-		currentState->Render();
+			quitButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
+			startGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
+
+			const std::string highestScoreText = "Highest Score: " + std::to_string((int)highestScore);
+			GetWindow()->RenderText(GetFont(), highestScoreText, (GetWindow()->GetWidth() * 0.37f), (GetWindow()->GetHeight() * 0.6f), { 0, 0, 0, 255 });
+			
+			
+			const std::string gameName = "LSD-JUMPER";
+			SDL_Color nameColor = { 0, 255, 255, 255 }; // color not working
+			GetWindow()->RenderText(GetNameFont(), gameName, (GetWindow()->GetWidth() * 0.35f), (GetWindow()->GetHeight() * 0.1f), nameColor);
+			
+
+			break;
+		}
+
+		case Application::Play:
+		{
+			game->Render(window->GetRenderer());
+			restartGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
+
+			break;
+		}
+
+		case Application::Dead:
+		{
+			SDL_RenderCopyF(window->GetRenderer(), gameOver, nullptr, nullptr);
+
+			quitButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
+			restartGameButton.Render(window->GetRenderer(), inputhandler->GetMouseXPosition(), inputhandler->GetMouseYPosition());
+
+			const std::string highestScoreText = "Highest Score: " + std::to_string((int)highestScore);
+			GetWindow()->RenderText(GetFont(), highestScoreText, (GetWindow()->GetWidth() * 0.35f), (GetWindow()->GetHeight() * 0.6f), { 0, 0, 0, 255 });
+
+
+			break;
+		}
+
+		default:
+			break;
+	}
 	
 	window->EndRender();
 }
-
-bool Application::SetState(const int newState)
+void Application::UpdateHighestScore(float score)
 {
-	// First make sure that 'newState' is in the bounds of the 'states' array
-	if(nextState || (newState < EState::MENU) || (newState > EState::GAME_OVER))
-		return false;
-
-	nextState = states[newState];
-
-	return true;
-}
-
-void Application::EndRound(const int score)
-{
-	highestScore = score;
-
-	SetState(EState::GAME_OVER);
+	if (score > highestScore)
+	{
+		highestScore = score;
+	}
 }
