@@ -26,7 +26,6 @@ void Button::Create(SDL_Renderer* renderer, TTF_Font* font, const std::string& t
 void Button::Destroy()
 {
 	SDL_DestroyTexture(texture);
-	texture = nullptr;
 }
 
 void Button::Render(SDL_Renderer* renderer, const float mouseXPosition, const float mouseYPosition)
