@@ -6,7 +6,7 @@
 #include "Player.h"
 #include "State.h"
 
-class GameOverState: public State
+class GameOverState final : public State
 {
 public:
 

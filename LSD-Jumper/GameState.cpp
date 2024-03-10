@@ -5,7 +5,9 @@
 
 bool GameState::Create(Application* mainApplication)
 {
-	//std::cout << "Creating game state" << std::endl;		//debugging stuff
+	std::cout << "Creating game state" << std::endl;
+
+	// Create objects that should created once and should persist during the lifetime of the game
 
 	application = mainApplication;
 
@@ -14,16 +16,18 @@ bool GameState::Create(Application* mainApplication)
 
 void GameState::Destroy()
 {
-	//std::cout << "Destroying game state" << std::endl;	//debugging stuff
+	std::cout << "Destroying game state" << std::endl;
+
+	// Destroy objects that has been created once and should be destroyed in the end of the game's lifetime
 
 	application = nullptr;
 }
 
 bool GameState::OnEnter()
 {
-	//std::cout << "Entering game state" << std::endl;		//debugging stuff
+	std::cout << "Entering game state" << std::endl;
 
-	// Create objects that should be created when this state starts (create textures, play the game music, play jump sound...)
+	// Create objects that should be created/started when this state is entered/started (create textures, load/start game music, load sounds etc)
 
 	Window* window = application->GetWindow();
 	SDL_Renderer* renderer = window->GetRenderer();
@@ -48,8 +52,6 @@ bool GameState::OnEnter()
 	music = application->GetAudioHandler()->CreateMusic("Assets/Audio/game.mp3");
 	if (!music)
 		return false;
-
-	//PLAYING THE GAME SOUND======================================================================
 	Mix_PlayMusic(music, -1);
 
 	TTF_Font* defaultFont = application->GetDefaultFont();
@@ -67,7 +69,7 @@ bool GameState::OnEnter()
 
 void GameState::OnExit()
 {
-	//std::cout << "Exiting game state" << std::endl;		//debugging stuff
+	std::cout << "Exiting game state" << std::endl;
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures, unload/stop game music, unload sounds etc)
 
@@ -100,7 +102,7 @@ void GameState::Update(const float deltaTime)
 	const float mouseYPosition = inputHandler->GetMouseYPosition();
 
 	if (menuButton.PointInside(mouseXPosition, mouseYPosition) && inputHandler->MouseButtonPressed(SDL_BUTTON_LEFT))
-		application->SetState(Application::States::MENU);
+		application->SetState(Application::EState::MENU);
 
 	if (quitButton.PointInside(mouseXPosition, mouseYPosition) && inputHandler->MouseButtonPressed(SDL_BUTTON_LEFT))
 		application->Quit();
@@ -115,7 +117,7 @@ void GameState::Update(const float deltaTime)
 	const SDL_FRect cameraRect = camera->GetRect();
 
 	if (player->GetYPosition() > ((cameraRect.y + cameraRect.h) - player->GetCollider().h))
-		application->EndRound((int)player->GetScore()); //Giving the score to be shown on the gameover state
+		application->EndRound((int)player->GetScore());
 }
 
 void GameState::Render()

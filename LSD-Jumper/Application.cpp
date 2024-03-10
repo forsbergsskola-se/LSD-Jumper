@@ -7,9 +7,9 @@
 Application::Application()
 {
 	// Seed the random number generator
-	srand(time(0));
+	srand((unsigned int)time(0));
 
-	for(int i = 0; i < States::NUM_STATES; i++)
+	for(int i = 0; i < EState::NUM_STATES; ++i)
 	{
 		states[i] = nullptr;
 	}
@@ -49,12 +49,12 @@ bool Application::Create()
 	if(!gameOverState->Create(this))
 		return false;
 
-	states[States::MENU] = menuState;
-	states[States::GAME] = gameState;
-	states[States::GAME_OVER] = gameOverState;
+	states[EState::MENU] = menuState;
+	states[EState::GAME] = gameState;
+	states[EState::GAME_OVER] = gameOverState;
 
 	// Set the start state
-	currentState = states[States::MENU];
+	currentState = states[EState::MENU];
 	if(!currentState->OnEnter())
 		return false;
 
@@ -66,7 +66,7 @@ void Application::Destroy()
 	if(currentState)
 		currentState->OnExit();
 
-	for(int i = 0; i < States::NUM_STATES; i++)
+	for(int i = 0; i < EState::NUM_STATES; ++i)
 	{
 		if(states[i])
 		{
@@ -136,6 +136,23 @@ void Application::Update()
 
 	if(currentState)
 		currentState->Update((float)timer.GetDeltaTime());
+
+	// If there's a pending state
+	if(nextState)
+	{
+		// Stop/exit the current state (see 'OnExit' function in each state) 
+		if(currentState)
+			currentState->OnExit();
+
+		// Do the state change
+		currentState = nextState;
+
+		// And start/enter the new state (see 'OnEnter' function in each state) 
+		if(!currentState->OnEnter())
+			running = false;
+
+		nextState = nullptr;
+	}
 }
 
 void Application::Render()
@@ -150,7 +167,12 @@ void Application::Render()
 
 bool Application::SetState(const int newState)
 {
+	// First make sure that 'newState' is in the bounds of the 'states' array
+	if(nextState || (newState < EState::MENU) || (newState > EState::GAME_OVER))
+		return false;
+
 	nextState = states[newState];
+
 	return true;
 }
 
@@ -158,5 +180,5 @@ void Application::EndRound(const int score)
 {
 	highestScore = score;
 
-	SetState(States::GAME_OVER);
+	SetState(EState::GAME_OVER);
 }

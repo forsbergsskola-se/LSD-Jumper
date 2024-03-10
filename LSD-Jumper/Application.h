@@ -13,7 +13,7 @@ class Application
 {
 public:
 
-	enum States
+	enum EState
 	{
 		MENU = 0,
 		GAME,

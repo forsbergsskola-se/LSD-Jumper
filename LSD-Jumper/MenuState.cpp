@@ -93,7 +93,7 @@ void MenuState::Update(const float deltaTime)
 	InputHandler* inputHandler = application->GetInputHandler();
 
 	if (startGameButton.PointInside(inputHandler->GetMouseXPosition(), inputHandler->GetMouseYPosition()) && inputHandler->MouseButtonPressed(SDL_BUTTON_LEFT))
-		application->SetState(Application::States::GAME);
+		application->SetState(Application::EState::GAME);
 
 	if (quitButton.PointInside(inputHandler->GetMouseXPosition(), inputHandler->GetMouseYPosition()) && inputHandler->MouseButtonPressed(SDL_BUTTON_LEFT))
 		application->Quit();
