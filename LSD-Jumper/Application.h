@@ -38,6 +38,7 @@ public:
 
 	TTF_Font* GetFont() { return font; }
 	TTF_Font* GetNameFont() { return nameFont; }
+	TTF_Font* GetCreditsFont() { return creditsFont; }
 
 	int volume = 2; //=================================================== SET THE VOLUME OF THE MUSIC AND THE JUMP SOUND!!!
 
@@ -80,6 +81,8 @@ private:
 	TTF_Font* font = nullptr;
 
 	TTF_Font* nameFont = nullptr;
+
+	TTF_Font* creditsFont = nullptr;
 
 	Player* player = nullptr;
 		

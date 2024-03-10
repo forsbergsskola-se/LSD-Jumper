@@ -71,6 +71,10 @@ bool Application::Create()
 	if (!nameFont)
 		return false;
 
+	creditsFont = fontHandler->CreateFont("Assets/Fonts/VT323-Regular.ttf", 30);
+	if (!creditsFont)
+		return false;
+
 
 	const float windowWidth = (float)window->GetWidth() * 0.5f;
 	const float windowHeight = (float)window->GetHeight() * 0.5f;
@@ -94,6 +98,7 @@ void Application::Destroy()
 	quitButton.Destroy();
 	startGameButton.Destroy();
 
+	fontHandler->DestroyFont(creditsFont);
 	fontHandler->DestroyFont(nameFont);
 	fontHandler->DestroyFont(font);
 
@@ -279,6 +284,9 @@ void Application::Render()
 
 			const std::string highestScoreText = "Highest Score: " + std::to_string((int)highestScore);
 			GetWindow()->RenderText(GetFont(), highestScoreText, (GetWindow()->GetWidth() * 0.37f), (GetWindow()->GetHeight() * 0.6f), { 0, 0, 0, 255 });
+
+			const std::string credits = "Created by: Marina Eleni Voukouresli and Branko Zikic";
+			GetWindow()->RenderText(GetCreditsFont(), credits, (GetWindow()->GetWidth() * 0.25f), (GetWindow()->GetHeight() * 0.9f), { 0, 0, 0, 255 });
 			
 			
 			const std::string gameName = "LSD-JUMPER";
