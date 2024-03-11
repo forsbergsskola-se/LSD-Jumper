@@ -4,6 +4,9 @@
 
 Inspired by a game called Icy Tower :-)
 
+![image](https://github.com/forsbergsskola-se/LSD-Jumper/assets/124393021/63593adb-d53d-499c-bd6c-bb981022e431)
+
+
 We chose SDL because is a powerful cross-platform development library that provides low-level access to audio, keyboard, mouse, joystick etc..
 The challenges were worth it and with the knowlegde that we gained we can gladly keep working on more projects with SDL and c++. 
 
