@@ -9,4 +9,8 @@ The challenges were worth it and with the knowlegde that we gained we can gladly
 
 Adding the libraries on our project went pretty much well execpt of one confusion that we had with github while we both pushing the same things all over again.
 
+We used our own classes and tried to keep the code as clean as possible. We use the headers to declare our functions and the cpp files to declare them. 
+
+![image](https://github.com/forsbergsskola-se/LSD-Jumper/assets/124393021/b25e4f61-83df-4281-b69f-51ae7e4c8b4b)
+
 
