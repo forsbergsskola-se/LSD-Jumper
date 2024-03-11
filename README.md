@@ -13,4 +13,4 @@ We used our own classes and tried to keep the code as clean as possible. We use 
 
 ![image](https://github.com/forsbergsskola-se/LSD-Jumper/assets/124393021/b25e4f61-83df-4281-b69f-51ae7e4c8b4b)
 
-
+One of the challenges we had was copying the files multiple times when including the headers. Using forward declaration solved the problem.
