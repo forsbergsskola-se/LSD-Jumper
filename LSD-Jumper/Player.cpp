@@ -94,7 +94,7 @@ void Player::Update(const float deltaTime, const std::vector<SDL_FRect>& levelCo
 		{
 			const SDL_FRect levelCollider = levelColliders[i];
 
-			// The current level collider is above the player's bottom part so just continue without checking collision against it
+			// The current level collider is above the player's bottom part so just continue without checking collision against it - jumps through the cloud
 			if((levelCollider.y + levelCollider.h) < (yPosition + collider.h))
 				continue;
 
@@ -102,7 +102,7 @@ void Player::Update(const float deltaTime, const std::vector<SDL_FRect>& levelCo
 			if(SDL_IntersectFRect(&collider, &levelCollider, &intersection) == SDL_TRUE)
 			{
 
-				// Stop the player on top of the current platform
+				// Stop the player on top of the current cloud
 				yPosition -= intersection.h;
 				yVelocity = 0.0f;
 				jumping = false;

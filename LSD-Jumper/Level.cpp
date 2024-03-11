@@ -82,23 +82,23 @@ void Level::Update(const SDL_FRect& cameraRect, const float deltaTime)
 		SDL_FRect& renderRect = renderRects[i];
 		SDL_FRect& collider = colliders[i];
 
-		//CLOUDS FALLING
+		//CLOUDS FALLING - DOESN'T WORK
 		//renderRect.y += cloudFallSpeed * deltaTime;
 		//collider.y = (renderRect.y + (renderRect.h * 0.5f)) - (collider.h * 0.5f);
 
 		if (renderRect.y > (cameraRect.y + cameraRect.h))
 		{
 			int lastIndex = (i - 1 + renderRects.size()) % renderRects.size();
-			std::cout << "Relocating cloud #" << i << " based on position of cloud #" << lastIndex << ".\n";
+			//std::cout << "Relocating cloud #" << i << " based on position of cloud #" << lastIndex << ".\n";		//debugging stuff
 			const SDL_FRect& lastCloud = renderRects[lastIndex ];
-			const int maxOffsetX = (lastCloud.w *0.5f) *3;
+			const int maxOffsetX = (lastCloud.w * 0.5f) * 3;
 			const int minOffsetX = -maxOffsetX;
 
 			const int curMinX = std::max(0, (int)lastCloud.x + minOffsetX);
 			const int curMaxX = std::min((int)(windowWidth - lastCloud.w), (int)lastCloud.x + maxOffsetX);
 
 
-			std::cout << "Here, we reposition the cloud with the old code.\n";
+			//std::cout << "Here, we reposition the cloud with the old code.\n";	//debugging stuff
 			const int xPosition = rand() % (curMaxX - curMinX) + curMinX;
 
 			renderRect.x = xPosition;
