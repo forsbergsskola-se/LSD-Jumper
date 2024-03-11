@@ -30,7 +30,7 @@ The gravity and the velocity challenge where we tried to make our player jump sm
 
 ![image](https://github.com/forsbergsskola-se/LSD-Jumper/assets/124393021/7285ac0c-1905-4ce0-b8bc-e6418a6d399e)
 
-Using min() and SDL_GetTicks() to accurately measure time and achieving smooth and consistent frame rates
+Utilizing min() and SDL_GetTicks() enables precise time measurement in the game, ensuring smooth and consistent frame rates
 ![image](https://github.com/forsbergsskola-se/LSD-Jumper/assets/124393021/5a791b12-66b6-4888-a878-2275841285a3)
 
 
