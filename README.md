@@ -19,8 +19,11 @@ We used our own classes and tried to keep the code as clean as possible. We use 
 One of the challenges we had was copying the files multiple times when including the headers. Using forward declaration solved the problem.
 
 Uploading the textures using SDL_Texture*
+
 ![image](https://github.com/forsbergsskola-se/LSD-Jumper/assets/124393021/e8334733-c36d-4ac8-a0e2-e76590e73c42)
+
 Finding the path
+
 ![image](https://github.com/forsbergsskola-se/LSD-Jumper/assets/124393021/8ba34d0a-4caa-486a-94cb-3fafe5b214b0)
 
 
